@@ -1,0 +1,27 @@
+{
+  "name": "markx",
+  "version": "0.0.1",
+  "description": "yet another markup language, inspired by markdown",
+  "main": "dist/markx.js",
+  "scripts": {
+    "test": "test_cmd"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/longztian/markx.git"
+  },
+  "keywords": [
+    "markx",
+    "markdown",
+    "markup"
+  ],
+  "author": "Longzhang Tian",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/longztian/markx/issues"
+  },
+  "homepage": "https://github.com/longztian/markx#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}
