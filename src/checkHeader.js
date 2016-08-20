@@ -1,3 +1,5 @@
+const debug = require('debug')('markx')
+
 const checkHeader = (lines) => {
   let i = 0,
     header = [],
@@ -6,17 +8,17 @@ const checkHeader = (lines) => {
 
   while (i < n) {
     line = lines[i]
-    console.log('check header: ' + line, i)
+    debug('check header: ' + line, i)
     if (line[0] === '#') {
-      if (line.substr(0, 2) === '# ') {
+      if (line.slice(0, 2) === '# ') {
         // h1
-        header.push('<h1>' + line.substr(2) + '</h1>')
-      } else if (line.substr(0, 3) === '## ') {
+        header.push('<h1>' + line.slice(2).trim() + '</h1>')
+      } else if (line.slice(0, 3) === '## ') {
         // h2
-        header.push('<h2>' + line.substr(3) + '</h2>')
-      } else if (line.substr(0, 4) === '### ') {
+        header.push('<h2>' + line.slice(3).trim() + '</h2>')
+      } else if (line.slice(0, 4) === '### ') {
         // h3
-        header.push('<h3>' + line.substr(4) + '</h3>')
+        header.push('<h3>' + line.slice(4).trim() + '</h3>')
       } else {
         break
       }

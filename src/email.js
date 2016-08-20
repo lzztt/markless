@@ -1,5 +1,7 @@
+const debug = require('debug')('markx')
+
 const email = function(line) {
-  console.log('email: ' + line)
+  debug('email: ' + line)
     // can be any part of the line
   if (line.indexOf('@') === -1) {
     return line

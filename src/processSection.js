@@ -1,3 +1,11 @@
+const debug = require('debug')('markx')
+const checkParagraph = require('./checkParagraph.js')
+const checkHeader = require('./checkHeader.js')
+const checkQuote = require('./checkQuote.js')
+const processText = require('./processText.js')
+const checkUnorderedList = require('./checkUnorderedList.js')
+const checkOrderedList = require('./checkOrderedList.js')
+
 const processSection = function(sec) {
   /*
    * each section can be:
@@ -15,7 +23,7 @@ const processSection = function(sec) {
     lines.splice(nLineLeft)
   }
 
-  console.log('====== new section =====', lines)
+  debug('====== new section =====', lines)
 
   while (lines.length > 0) {
     // update nLineLeft and avoid infinite loop caused by unprocessable lines
@@ -23,7 +31,7 @@ const processSection = function(sec) {
 
     let processedLines = checkParagraph(lines)
     if (processedLines.length > 0) {
-      console.log('found paragraph lines')
+      debug('found paragraph lines')
       html = html + '<p>' + processedLines.join('<br>') + '</p>'
         // finished?
       if (lines.length === 0)
@@ -33,7 +41,7 @@ const processSection = function(sec) {
     // header
     processedLines = checkHeader(lines)
     if (processedLines.length > 0) {
-      console.log('found header lines')
+      debug('found header lines')
       html = html + processedLines.join('')
         // finished?
       if (lines.length === 0)
@@ -43,7 +51,7 @@ const processSection = function(sec) {
     // quote
     processedLines = checkQuote(lines)
     if (processedLines.length > 0) {
-      console.log('found quote lines', processedLines)
+      debug('found quote lines', processedLines)
       html = html + '<blockquote>' + processText(processedLines.join('\n')) + '</blockquote>'
         // finished?
       if (lines.length === 0)
@@ -53,7 +61,7 @@ const processSection = function(sec) {
     // unordered list
     processedLines = checkUnorderedList(lines)
     if (processedLines.length > 0) {
-      console.log('found ul lines')
+      debug('found ul lines')
       html = html + '<ul><li>' + processedLines.join('</li><li>') + '</li></ul>'
         // finished?
       if (lines.length === 0)
@@ -63,7 +71,7 @@ const processSection = function(sec) {
     // ordered list
     processedLines = checkOrderedList(lines)
     if (processedLines.length > 0) {
-      console.log('found ol lines')
+      debug('found ol lines')
       html = html + '<ol><li>' + processedLines.join('</li><li>') + '</li></ol>'
         // finished?
       if (lines.length === 0)

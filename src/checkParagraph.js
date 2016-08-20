@@ -1,3 +1,5 @@
+const debug = require('debug')('markx')
+
 const processLine = require('./processLine.js')
 
 const checkParagraph = (lines) => {
@@ -8,7 +10,7 @@ const checkParagraph = (lines) => {
 
   while (i < n) {
     line = lines[i]
-    console.log('check paragraph: ' + line)
+    debug('check paragraph: ' + line)
     begin = line.substr(0, 2)
     if (begin !== '> ' && begin !== '- ' && line.search(/^[0-9]\. /) === -1 && line.search(/^#{1,3} /) === -1) {
       pLines.push(line)

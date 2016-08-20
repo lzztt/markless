@@ -1,3 +1,7 @@
+const debug = require('debug')('markx')
+const checkNestedList = require('./checkNestedList.js')
+const processLine = require('./processLine.js')
+
 const checkUnorderedList = function(lines) {
   let i = 0,
     list = [],
@@ -6,19 +10,19 @@ const checkUnorderedList = function(lines) {
     return list
 
   let line = lines[i]
-  console.log('checkUnorderedList: ' + line)
+  debug('checkUnorderedList: ' + line)
     // unordered list
   if (line.substr(0, 2) === '- ') {
-    console.log('found unordered list line: ' + line)
+    debug('found unordered list line: ' + line)
       // up to 2 levels
     list.push(line.replace(/^- +/, ''))
       // go to next line
     i++
     while (i < n) {
       line = lines[i]
-      console.log('checkUnorderedList: ' + line)
+      debug('checkUnorderedList: ' + line)
       if (line.substr(0, 2) === '- ') {
-        console.log('found unordered list line: ' + line)
+        debug('found unordered list line: ' + line)
         list.push(line.replace(/^- +/, ''))
       } else if (!checkNestedList(line, list)) {
         break
@@ -35,7 +39,7 @@ const checkUnorderedList = function(lines) {
 
   return list.map(function(li) {
     if (typeof li === 'object' && 'sublists' in li) {
-      console.log(li)
+      debug(li)
       return processLine(li.text) + li.sublists.map(function(sl) {
         return '<' + sl.type + '><li>' + sl.list.map(processLine).join('</li><li>') + '</li></' + sl.type + '>'
       }).join('')

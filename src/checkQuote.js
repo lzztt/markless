@@ -1,3 +1,5 @@
+const debug = require('debug')('markx')
+
 const checkQuote = function(lines) {
   let i = 0,
     quote = [],
@@ -6,7 +8,7 @@ const checkQuote = function(lines) {
 
   while (i < n) {
     line = lines[i]
-    console.log('checkQuote: ' + line)
+    debug('checkQuote: ' + line)
     if (line.substr(0, 2) === '> ') {
       // only take well formated, first level quote
       // nested quote (>>) will be ignored

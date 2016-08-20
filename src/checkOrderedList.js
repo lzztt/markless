@@ -1,3 +1,7 @@
+const debug = require('debug')('markx')
+const checkNestedList = require('./checkNestedList.js')
+const processLine = require('./processLine.js')
+
 const checkOrderedList = function(lines) {
   let i = 0,
     list = [],
@@ -6,10 +10,10 @@ const checkOrderedList = function(lines) {
     return list
 
   let line = lines[i]
-  console.log('checkOrderedList: ' + line)
+  debug('checkOrderedList: ' + line)
     // ordered list
   if (line.match(/^[0-9]\. /)) {
-    console.log('found ordered list line: ' + line)
+    debug('found ordered list line: ' + line)
       // first level always labeled with numbers, up to 2 levels
     list.push(line.replace(/^[0-9]\. +/, ''))
 
@@ -17,9 +21,9 @@ const checkOrderedList = function(lines) {
     i++
     while (i < n) {
       line = lines[i]
-      console.log('checkOrderedList: ' + line)
+      debug('checkOrderedList: ' + line)
       if (line.match(/^[0-9]\. /)) {
-        console.log('found ordered list line: ' + line)
+        debug('found ordered list line: ' + line)
         list.push(line.replace(/^[0-9]\. +/, ''))
       } else if (!checkNestedList(line, list)) {
         break
@@ -36,7 +40,7 @@ const checkOrderedList = function(lines) {
 
   return list.map(function(li) {
     if (typeof li === 'object' && 'sublists' in li) {
-      console.log(li)
+      debug(li)
       return processLine(li.text) + li.sublists.map(function(sl) {
         return '<' + sl.type + '><li>' + sl.list.map(processLine).join('</li><li>') + '</li></' + sl.type + '>'
       }).join('')

@@ -22,6 +22,9 @@
   },
   "homepage": "https://github.com/longztian/markx#readme",
   "devDependencies": {
-    "gulp": "^3.9.1"
+    "chai": "^3.5.0",
+    "eslint": "^3.3.1",
+    "gulp": "^3.9.1",
+    "mocha": "^3.0.2"
   }
 }

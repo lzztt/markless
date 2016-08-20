@@ -1,8 +1,10 @@
+const debug = require('debug')('markx')
+
 const checkNestedList = function(line, list) {
-  console.log('checkNestedList: ' + line)
+  debug('checkNestedList: ' + line)
   if (line.match(/^ +- /)) {
     // nested unordered list
-    console.log('found nested ulist line: ' + line, list)
+    debug('found nested ulist line: ' + line, list)
     let last = list[list.length - 1]
     if (typeof last === 'string') {
       list.push({
@@ -22,7 +24,7 @@ const checkNestedList = function(line, list) {
     last.sublists[last.sublists.length - 1].list.push(line.replace(/^ +- +/, ''))
   } else if (line.match(/^ +[0-9]\. /)) {
     // nested ordered list, labeled with numbers
-    console.log('found nested olist line: ' + line)
+    debug('found nested olist line: ' + line)
     let last = list[list.length - 1]
     if (typeof last === 'string') {
       list.push({
@@ -43,7 +45,7 @@ const checkNestedList = function(line, list) {
   } else {
     return false
   }
-  console.log(list)
+  debug(list)
   return true
 }
 

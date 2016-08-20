@@ -1,5 +1,7 @@
+const debug = require('debug')('markx')
+
 const media = function(line) {
-  console.log('media', line.substr(0, 8), line.substr(0, 33), line.substr(0, 17))
+  debug('media', line.substr(0, 8), line.substr(0, 33), line.substr(0, 17))
   if (line.substr(0, 8) === 'https://') {
     // https
     // youtube video

@@ -1,24 +1,31 @@
- const processLine = function(line) {
-    console.log('processLine: ' + line)
+const debug = require('debug')('markx')
+const image = require('./image.js')
+const media = require('./media.js')
+const link = require('./link.js')
+const email = require('./email.js')
+const font = require('./font.js')
 
-    let ret = image(line)
-    if (ret !== line)
-      return ret
+const processLine = function(line) {
+  debug('processLine: ' + line)
 
-    ret = media(line)
-    if (ret !== line)
-      return ret
+  let ret = image(line)
+  if (ret !== line)
+    return ret
 
-    // let hasEscape = (line.match(/`/g) || []).length > 1
-    // let _escape = function(line) {
-    //   //`1` `2` `3` => <1> <2> <3>
-    // }
+  ret = media(line)
+  if (ret !== line)
+    return ret
 
-    // let _unescape = function(line) {
-    //   //<1> <2> <3> => `1` `2` `3`
-    // }
+  // let hasEscape = (line.match(/`/g) || []).length > 1
+  // let _escape = function(line) {
+  //   //`1` `2` `3` => <1> <2> <3>
+  // }
 
-    return link(email(font(line)))
-  }
+  // let _unescape = function(line) {
+  //   //<1> <2> <3> => `1` `2` `3`
+  // }
 
-  module.exports = processLine
+  return link(email(font(line)))
+}
+
+module.exports = processLine
