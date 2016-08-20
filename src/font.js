@@ -1,5 +1,7 @@
+const debug = require('debug')('markx')
+
 const font = function(line) {
-  console.log('font: ' + line)
+  debug('font: ' + line)
     // must be less than 50% of the line
     // no leading or trailing spaces
   line = line
