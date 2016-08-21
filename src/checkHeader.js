@@ -1,5 +1,3 @@
-const debug = require('debug')('markx')
-
 const checkHeader = (lines) => {
   let i = 0,
     header = [],
@@ -8,7 +6,7 @@ const checkHeader = (lines) => {
 
   while (i < n) {
     line = lines[i]
-    debug('check header: ' + line, i)
+
     if (line[0] === '#') {
       if (line.slice(0, 2) === '# ') {
         // h1
