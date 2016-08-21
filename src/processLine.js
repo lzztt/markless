@@ -1,12 +1,11 @@
-const debug = require('debug')('markx')
 const image = require('./image.js')
 const media = require('./media.js')
 const link = require('./link.js')
 const email = require('./email.js')
 const font = require('./font.js')
 
-const processLine = function(line) {
-  debug('processLine: ' + line)
+const processLine = (line) => {
+  line = line.trim()
 
   let ret = image(line)
   if (ret !== line)
@@ -16,16 +15,16 @@ const processLine = function(line) {
   if (ret !== line)
     return ret
 
-  // let hasEscape = (line.match(/`/g) || []).length > 1
-  // let _escape = function(line) {
-  //   //`1` `2` `3` => <1> <2> <3>
-  // }
+  let segments = line.split('`')
+  let last = ''
+  if (segments.length % 2 === 0) {
+    // odd number of '`'
+    last = '`' + segments.pop()
+  }
 
-  // let _unescape = function(line) {
-  //   //<1> <2> <3> => `1` `2` `3`
-  // }
-
-  return link(email(font(line)))
+  return segments.map((segment, index) => {
+    return index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`
+  }).join('') + last
 }
 
 module.exports = processLine

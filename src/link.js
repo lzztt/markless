@@ -1,25 +1,23 @@
-const debug = require('debug')('markx')
+const link = (line) => {
+  // raw url:
+  // https://www.houstonbbs.com
+  // text url:
+  // [text https://www.houstonbbs.com]
+  if (line.includes('http://') || line.includes('https://')) {
+    let http = '<H^T^T^P>',
+      escaped = false
 
-const link = function(line) {
-  debug('link: ' + line)
-    // must be a new line, and 1 line only
-    // https://www.houstonbbs.com[text]
-    // raw url:
-    // https://www.houstonbbs.com
-    // text url:
-    // [text https://www.houstonbbs.com]
-  if (line.indexOf('http://') === -1 && line.indexOf('https://') === -1) {
-    return line
-  } else {
-    debug('found link: ' + line)
-      // let li = line.replace(/(https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?)\[([^\s\[\]][^\[\]]*[^\s\[\]])\]/, '<a href="$1$2">$5</a>')
-    let li = line.replace(/\[([^\s\[\]][^\[\]]*[^\s\[\]]) (https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?)\]/, '<a href="$2$3">$1</a>')
-    if (li.length !== line.length) {
-      return li
-    } else {
-      return line.replace(/(https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?)/, '<a href="$1$2">$2</a>')
-    }
+    line = line.replace(/\[([^\s\[\]][^\[\]]*[^\s\[\]]) (https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?)\]/g, (match, p1, p2, p3) => {
+      escaped = true
+      p1 = p1.replace('http', http)
+      p2 = p2.replace('http', http)
+      return `<a href="${p2}${p3}">${p1}</a>`
+    }).replace(/(https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?)/g, '<a href="$1$2">$2</a>')
+
+    return escaped ? line.replace(http, 'http') : line
   }
+
+  return line
 }
 
 module.exports = link

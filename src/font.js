@@ -1,13 +1,10 @@
-const debug = require('debug')('markx')
-
-const font = function(line) {
-  debug('font: ' + line)
-    // must be less than 50% of the line
-    // no leading or trailing spaces
+const font = (line) => {
+  // must be less than 50% of the line
+  // no leading or trailing spaces
   line = line
-    .replace(/\*([^ \*][^\*]*[^ \*])\*/g, '<b>$1</b>')
-    .replace(/~([^ \~][^\~]*[^ \~])~/g, '<s>$1</s>')
-    .replace(/_([^ _][^_]*[^ _])_/g, '<u>$1</u>')
+    .replace(/\*([^\s\*][^\*]*[^\s\*])\*/g, '<b>$1</b>')
+    .replace(/~([^\s~][^~]*[^\s~])~/g, '<s>$1</s>')
+    .replace(/_([^\s_][^_]*[^\s_])_/g, '<u>$1</u>')
 
   // mark / hightlight
   // [text r] [text r!], color can be red, blue, green

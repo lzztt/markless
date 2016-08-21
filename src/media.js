@@ -1,8 +1,9 @@
-const debug = require('debug')('markx')
+const media = (line) => {
+  if (line.search(/[\s<'"\(\)\[\]\{\}\|]/) !== -1) {
+    return line
+  }
 
-const media = function(line) {
-  debug('media', line.substr(0, 8), line.substr(0, 33), line.substr(0, 17))
-  if (line.substr(0, 8) === 'https://') {
+  if (line.slice(0, 8) === 'https://') {
     // https
     // youtube video
     //https://www.youtube.com/watch?v=lkrlNGLtidg
@@ -18,14 +19,16 @@ const media = function(line) {
     //https://www.youtube.com/watch?v=qrx1vyvtRLY&list=RDqrx1vyvtRLY#t=7644
     //https://www.youtube.com/watch?v=CcsUYu0PVxY&list=RDqrx1vyvtRLY&index=3
     //https://www.youtube.com/watch?v=_JgHVlcaQJ0&index=21&list=RDqrx1vyvtRLY
-    if (line.substr(0, 32) === 'https://www.youtube.com/watch?v=') {
+    let uri = ''
+    if (line.slice(0, 32) === 'https://www.youtube.com/watch?v=') {
       // regular url
-      return '<iframe width="420" height="315" src="' + line.replace('watch?v=', 'embed/').replace(/#t=\d+/, '').replace(/&index=\d+/, '').replace('&', '?') + '" frameborder="0" allowfullscreen></iframe>'
-    } else if (line.substr(0, 16) === 'https://youtu.be') {
+      uri = line.replace('watch?v=', 'embed/').replace(/#t=\d+/, '').replace(/&index=\d+/, '').replace('&', '?')
+    } else if (line.slice(0, 16) === 'https://youtu.be') {
       // short url
-      return '<iframe width="420" height="315" src="' + line.replace('https://youtu.be', 'https://www.youtube.com/embed') + '" frameborder="0" allowfullscreen></iframe>'
+      uri = line.replace('https://youtu.be', 'https://www.youtube.com/embed')
     }
-  } else if (line.substr(0, 7) === 'http://') {
+    return `<iframe width="420" height="315" src="${uri}" frameborder="0" allowfullscreen></iframe>`
+  } else if (line.slice(0, 7) === 'http://') {
     // http
     //youku video?
   }

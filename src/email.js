@@ -1,8 +1,5 @@
-const debug = require('debug')('markx')
-
-const email = function(line) {
-  debug('email: ' + line)
-    // can be any part of the line
+const email = (line) => {
+  // can be any part of the line
   if (line.indexOf('@') === -1) {
     return line
   } else {
