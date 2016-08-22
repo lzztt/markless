@@ -1,4 +1,4 @@
-const checkHeader = (lines) => {
+const popHeader = (lines) => {
   let i = 0,
     header = [],
     n = lines.length,
@@ -35,4 +35,4 @@ const checkHeader = (lines) => {
   return header
 }
 
-module.exports = checkHeader
+module.exports = popHeader
