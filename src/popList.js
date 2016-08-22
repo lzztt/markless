@@ -12,9 +12,12 @@ class Item {
 const OLIST = 'ol'
 const ULIST = 'ul'
 
-const checkList = (lines) => {
+const popList = (lines) => {
+  let type = null,
+    items = []
+
   if (lines.length > 0) {
-    let type, i = 0
+    let i = 0
 
     let line = lines[i],
       prefix = line.match(/^[0-9]{1,2}\. +/)
@@ -27,7 +30,6 @@ const checkList = (lines) => {
       }
     }
 
-    let items = []
     if (prefix) {
       // found an item
       items.push(new Item(prefix[0].length, line))
@@ -53,20 +55,15 @@ const checkList = (lines) => {
     }
 
     // remove processed lines
-    // list need to contain at least two items
-    if (items.length > 1) {
+    if (items.length > 0) {
       lines.splice(0, i)
-      return {
-        type: type,
-        items: items.map(it => it.lines)
-      }
     }
   }
 
   return {
-    type: null,
-    items: []
+    type: type,
+    items: items.map(it => it.lines)
   }
 }
 
-module.exports = checkList
+module.exports = popList

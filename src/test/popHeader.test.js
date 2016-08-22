@@ -1,12 +1,12 @@
 const expect = require('chai').expect
-const checkHeader = require('../checkHeader.js')
+const popHeader = require('../popHeader.js')
 
 describe('process header', () => {
   it('single header line', () => {
     let inLines = ['# header1']
     let outLines = ['<h1>header1</h1>']
 
-    expect(checkHeader(inLines)).to.be.deep.equal(outLines)
+    expect(popHeader(inLines)).to.be.deep.equal(outLines)
     expect(inLines.length).to.be.equal(0)
   })
 
@@ -22,7 +22,7 @@ describe('process header', () => {
       '<h3>header3</h3>'
     ]
 
-    expect(checkHeader(inLines)).to.be.deep.equal(outLines)
+    expect(popHeader(inLines)).to.be.deep.equal(outLines)
     expect(inLines.length).to.be.equal(0)
   })
 
@@ -36,7 +36,7 @@ describe('process header', () => {
       '<h1>header1</h1>'
     ]
 
-    expect(checkHeader(inLines)).to.be.deep.equal(outLines)
+    expect(popHeader(inLines)).to.be.deep.equal(outLines)
     expect(inLines.length).to.be.equal(2)
   })
 
@@ -52,7 +52,7 @@ describe('process header', () => {
       '<h3>header3</h3>'
     ]
 
-    expect(checkHeader(inLines)).to.be.deep.equal(outLines)
+    expect(popHeader(inLines)).to.be.deep.equal(outLines)
     expect(inLines.length).to.be.equal(0)
   })
 
@@ -65,7 +65,7 @@ describe('process header', () => {
       '<h3>header3</h3>'
     ]
 
-    expect(checkHeader(inLines)).to.be.deep.equal(outLines)
+    expect(popHeader(inLines)).to.be.deep.equal(outLines)
     expect(inLines.length).to.be.equal(1)
   })
 })
