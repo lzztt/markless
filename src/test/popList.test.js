@@ -40,6 +40,16 @@ describe('process list', () => {
     expect(inLines.length).to.be.equal(0)
   })
 
+  it('pop nothing if not a list', () => {
+    let inLines = [
+      'text text',
+      'not an item'
+    ]
+
+    expect(popList(inLines)).to.be.equal(null)
+    expect(inLines.length).to.be.equal(2)
+  })
+
   it('a list may contain one item', () => {
     let inLines = [
       '1. item 1',

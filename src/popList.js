@@ -13,11 +13,10 @@ const OLIST = 'ol'
 const ULIST = 'ul'
 
 const popList = (lines) => {
-  let type = null,
-    items = []
-
   if (lines.length > 0) {
-    let i = 0
+    let i = 0,
+      type = null,
+      items = []
 
     let line = lines[i],
       prefix = line.match(/^[0-9]{1,2}\. +/)
@@ -57,13 +56,14 @@ const popList = (lines) => {
     // remove processed lines
     if (items.length > 0) {
       lines.splice(0, i)
+      return {
+        type: type,
+        items: items.map(it => it.lines)
+      }
     }
   }
 
-  return {
-    type: type,
-    items: items.map(it => it.lines)
-  }
+  return null
 }
 
 module.exports = popList

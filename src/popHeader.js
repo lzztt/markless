@@ -1,10 +1,7 @@
 const popHeader = (lines) => {
-  let i = 0,
-    header = [],
-    n = lines.length,
-    line
+  let i, line, header = []
 
-  while (i < n) {
+  for (i = 0; i < lines.length; i++) {
     line = lines[i]
 
     if (line[0] === '#') {
@@ -23,8 +20,6 @@ const popHeader = (lines) => {
     } else {
       break
     }
-    // go to next line
-    i++
   }
 
   // remove processed lines
