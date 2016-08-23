@@ -44,7 +44,7 @@ const popList = (lines) => {
           // not a new list item
           // check if line belongs to last item (have the same indent)
           let item = items[items.length - 1]
-          if (line.replace(/^ */, '').length === line.length - item.indent) {
+          if (line.slice(0, item.indent).match(/^ *$/)) {
             item.add(line)
           } else {
             break

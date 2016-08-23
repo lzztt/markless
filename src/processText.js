@@ -1,6 +1,7 @@
 const popHeader = require('./popHeader.js')
 const popQuote = require('./popQuote.js')
 const popList = require('./popList.js')
+const processLine = require('./processLine.js')
 
 const processText = (text) => {
   let lines = text.trim().replace('\r', '').split(/\n/g)
@@ -24,7 +25,7 @@ class QuoteBlock {
 
   toString() {
     if (this.blocks.length === 1 && this.blocks[0] instanceof ParagraphBlock) {
-      return '<blockquote>' + this.lines.join('<br>') + '</blockquote>'
+      return '<blockquote>' + this.blocks[0].getInnerText() + '</blockquote>'
     }
 
     return '<blockquote>' + this.blocks.join('') + '</blockquote>'
@@ -32,13 +33,24 @@ class QuoteBlock {
 }
 
 class ListBlock {
-  constructor(items, type) {
+  constructor(type, items) {
     this.items = items
     this.type = type
   }
 
   toString() {
-    return '<' + this.type + '><li>' + this.items.join('</li><li>') + '</li></' + this.type + '>'
+    let items = this.items.map(it => {
+      if (it.length === 1 && it[0] instanceof ParagraphBlock) {
+        return it[0].getInnerText()
+      }
+
+      if (it.length === 2 && it[0] instanceof ParagraphBlock && it[1] instanceof ListBlock) {
+        return it[0].getInnerText() + it[1]
+      }
+
+      return it.join('')
+    })
+    return '<' + this.type + '><li>' + items.join('</li><li>') + '</li></' + this.type + '>'
   }
 }
 
@@ -47,12 +59,14 @@ class ParagraphBlock {
     this.lines = lines
   }
 
+  getInnerText() {
+    return this.lines.map(processLine).join('<br>')
+  }
+
   toString() {
-    return '<p>' + this.lines.join('<br>') + '</p>'
+    return '<p>' + this.getInnerText() + '</p>'
   }
 }
-
-
 
 const processLines = (lines) => {
   /*
@@ -86,10 +100,7 @@ const processLines = (lines) => {
     if (_lines.length > 0) {
       processParagraph()
       blocks.push(..._lines.map(line => new HeaderBlock(line)))
-        // finished?
-      if (lines.length === 0) {
-        break
-      }
+      continue
     }
 
     // quote
@@ -97,10 +108,7 @@ const processLines = (lines) => {
     if (_lines.length > 0) {
       processParagraph()
       blocks.push(new QuoteBlock(processLines(_lines)))
-        // finished?
-      if (lines.length === 0) {
-        break
-      }
+      continue
     }
 
     // list
@@ -108,10 +116,7 @@ const processLines = (lines) => {
     if (list) {
       processParagraph()
       blocks.push(new ListBlock(list.type, list.items.map(it => processLines(it))))
-        // finished?
-      if (lines.length === 0) {
-        break
-      }
+      continue
     }
 
     // just a normal paragraph line

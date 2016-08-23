@@ -92,6 +92,7 @@ describe('process list', () => {
       '1. item 1',
       '2. item 2',
       '   - item 2 1',
+      '     item 2 1 continue',
       '   - item 2 2',
       '33.  item 3',
       '     1. item 3 1',
@@ -99,7 +100,7 @@ describe('process list', () => {
     ]
     let outItems = [
       ['item 1'],
-      ['item 2', '- item 2 1', '- item 2 2'],
+      ['item 2', '- item 2 1', '  item 2 1 continue', '- item 2 2'],
       ['item 3', '1. item 3 1', '2. item 3 2']
     ]
 
