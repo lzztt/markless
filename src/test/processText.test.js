@@ -141,4 +141,25 @@ text text`
     expect(processText(input)).to.be.equal(output)
   })
 
+  it('list would stop if hit empty line', () => {
+    let input = `text text
+1. item 1
+
+2. item 2`
+    let output = '<p>text text</p>' +
+      '<ol><li>item 1</li></ol>' +
+      '<ol><li>item 2</li></ol>'
+
+    expect(processText(input)).to.be.equal(output)
+  })
+
+  it('paragraph would stop if hit empty line', () => {
+    let input = `text text
+
+text text`
+    let output = '<p>text text</p><p>text text</p>'
+
+    expect(processText(input)).to.be.equal(output)
+  })
+
 })
