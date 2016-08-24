@@ -14,12 +14,12 @@ const ULIST = 'ul'
 
 const popList = (lines) => {
   if (lines.length > 0) {
-    let i = 0,
-      type = null,
-      items = []
+    const items = []
 
-    let line = lines[i],
-      prefix = line.match(/^[0-9]{1,2}\. +/)
+    let type
+    let i = 0
+    let line = lines[i]
+    let prefix = line.match(/^[0-9]{1,2}\. +/)
     if (prefix) {
       type = OLIST
     } else {
@@ -29,21 +29,21 @@ const popList = (lines) => {
       }
     }
 
-    if (prefix) {
+    if (type) {
       // found an item
       items.push(new Item(prefix[0].length, line))
 
       // check more lines
       for (i = 1; i < lines.length; i++) {
-        let line = lines[i],
-          prefix = type === OLIST ? line.match(/^[0-9]{1,2}\. +/) : line.match(/^- +/)
+        line = lines[i]
+        prefix = type === OLIST ? line.match(/^[0-9]{1,2}\. +/) : line.match(/^- +/)
         if (prefix) {
           // new list item
           items.push(new Item(prefix[0].length, line))
         } else {
           // not a new list item
           // check if line belongs to last item (have the same indent)
-          let item = items[items.length - 1]
+          const item = items[items.length - 1]
           if (line.length > item.indent && line.slice(0, item.indent).match(/^ *$/)) {
             item.add(line)
           } else {
@@ -57,8 +57,8 @@ const popList = (lines) => {
     if (items.length > 0) {
       lines.splice(0, i)
       return {
-        type: type,
-        items: items.map(it => it.lines)
+        type,
+        items: items.map(it => it.lines),
       }
     }
   }
@@ -66,4 +66,4 @@ const popList = (lines) => {
   return null
 }
 
-module.exports = popList
+export default popList

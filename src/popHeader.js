@@ -1,19 +1,20 @@
 const popHeader = (lines) => {
-  let i, line, header = []
+  const header = []
 
+  let i
   for (i = 0; i < lines.length; i++) {
-    line = lines[i]
+    const line = lines[i]
 
     if (line[0] === '#') {
       if (line.slice(0, 2) === '# ') {
         // h1
-        header.push('<h1>' + line.slice(2).trim() + '</h1>')
+        header.push(`<h1>${line.slice(2).trim()}</h1>`)
       } else if (line.slice(0, 3) === '## ') {
         // h2
-        header.push('<h2>' + line.slice(3).trim() + '</h2>')
+        header.push(`<h2>${line.slice(3).trim()}</h2>`)
       } else if (line.slice(0, 4) === '### ') {
         // h3
-        header.push('<h3>' + line.slice(4).trim() + '</h3>')
+        header.push(`<h3>${line.slice(4).trim()}</h3>`)
       } else {
         break
       }
@@ -30,4 +31,4 @@ const popHeader = (lines) => {
   return header
 }
 
-module.exports = popHeader
+export default popHeader
