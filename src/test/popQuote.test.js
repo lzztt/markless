@@ -1,17 +1,17 @@
-const expect = require('chai').expect
-const popQuote = require('../popQuote.js')
+import { expect } from 'chai'
+import popQuote from '../popQuote'
 
 describe('process quote', () => {
   it('quote', () => {
-    let inLines = [
+    const inLines = [
       '> text 1',
       '> text 2',
       '>not a quote line',
-      'not a quote line'
+      'not a quote line',
     ]
-    let outLines = [
+    const outLines = [
       'text 1',
-      'text 2'
+      'text 2',
     ]
 
     expect(popQuote(inLines)).to.be.deep.equal(outLines)

@@ -1,12 +1,9 @@
-const popHeader = require('./popHeader.js')
-const popQuote = require('./popQuote.js')
-const popList = require('./popList.js')
-const processLine = require('./processLine.js')
+/* eslint no-continue: "off" */
 
-const processText = (text) => {
-  let lines = text.trim().replace('\r', '').split(/\n/g)
-  return processLines(lines).join('')
-}
+import popHeader from './popHeader'
+import popQuote from './popQuote'
+import popList from './popList'
+import processLine from './processLine'
 
 class HeaderBlock {
   constructor(line) {
@@ -15,42 +12,6 @@ class HeaderBlock {
 
   toString() {
     return this.line
-  }
-}
-
-class QuoteBlock {
-  constructor(blocks) {
-    this.blocks = blocks
-  }
-
-  toString() {
-    if (this.blocks.length === 1 && this.blocks[0] instanceof ParagraphBlock) {
-      return '<blockquote>' + this.blocks[0].getInnerText() + '</blockquote>'
-    }
-
-    return '<blockquote>' + this.blocks.join('') + '</blockquote>'
-  }
-}
-
-class ListBlock {
-  constructor(type, items) {
-    this.items = items
-    this.type = type
-  }
-
-  toString() {
-    let items = this.items.map(it => {
-      if (it.length === 1 && it[0] instanceof ParagraphBlock) {
-        return it[0].getInnerText()
-      }
-
-      if (it.length === 2 && it[0] instanceof ParagraphBlock && it[1] instanceof ListBlock) {
-        return it[0].getInnerText() + it[1]
-      }
-
-      return it.join('')
-    })
-    return '<' + this.type + '><li>' + items.join('</li><li>') + '</li></' + this.type + '>'
   }
 }
 
@@ -64,7 +25,43 @@ class ParagraphBlock {
   }
 
   toString() {
-    return '<p>' + this.getInnerText() + '</p>'
+    return `<p>${this.getInnerText()}</p>`
+  }
+}
+
+class QuoteBlock {
+  constructor(blocks) {
+    this.blocks = blocks
+  }
+
+  toString() {
+    if (this.blocks.length === 1 && this.blocks[0] instanceof ParagraphBlock) {
+      return `<blockquote>${this.blocks[0].getInnerText()}</blockquote>`
+    }
+
+    return `<blockquote>${this.blocks.join('')}</blockquote>`
+  }
+}
+
+class ListBlock {
+  constructor(type, items) {
+    this.items = items
+    this.type = type
+  }
+
+  toString() {
+    const items = this.items.map(it => {
+      if (it.length === 1 && it[0] instanceof ParagraphBlock) {
+        return it[0].getInnerText()
+      }
+
+      if (it.length === 2 && it[0] instanceof ParagraphBlock && it[1] instanceof ListBlock) {
+        return it[0].getInnerText() + it[1]
+      }
+
+      return it.join('')
+    })
+    return `<${this.type}><li>${items.join('</li><li>')}</li></${this.type}>`
   }
 }
 
@@ -77,10 +74,10 @@ const processLines = (lines) => {
    *   list: <ol>/<ul>
    *   paragraph: <p>
    */
-  let blocks = []
+  const blocks = []
 
   let paragraphLines = []
-  let processParagraph = () => {
+  const processParagraph = () => {
     if (paragraphLines.length > 0) {
       blocks.push(new ParagraphBlock(paragraphLines))
       paragraphLines = []
@@ -96,23 +93,23 @@ const processLines = (lines) => {
     }
 
     // header
-    let _lines = popHeader(lines)
-    if (_lines.length > 0) {
+    let retLines = popHeader(lines)
+    if (retLines.length > 0) {
       processParagraph()
-      blocks.push(..._lines.map(line => new HeaderBlock(line)))
+      blocks.push(...retLines.map(line => new HeaderBlock(line)))
       continue
     }
 
     // quote
-    _lines = popQuote(lines)
-    if (_lines.length > 0) {
+    retLines = popQuote(lines)
+    if (retLines.length > 0) {
       processParagraph()
-      blocks.push(new QuoteBlock(processLines(_lines)))
+      blocks.push(new QuoteBlock(processLines(retLines)))
       continue
     }
 
     // list
-    let list = popList(lines)
+    const list = popList(lines)
     if (list) {
       processParagraph()
       blocks.push(new ListBlock(list.type, list.items.map(it => processLines(it))))
@@ -128,4 +125,9 @@ const processLines = (lines) => {
   return blocks
 }
 
-module.exports = processText
+const processText = (text) => {
+  const lines = text.trim().replace('\r', '').split(/\n/g)
+  return processLines(lines).join('')
+}
+
+export default processText

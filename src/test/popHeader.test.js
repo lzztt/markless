@@ -1,25 +1,25 @@
-const expect = require('chai').expect
-const popHeader = require('../popHeader.js')
+import { expect } from 'chai'
+import popHeader from '../popHeader'
 
 describe('process header', () => {
   it('single header line', () => {
-    let inLines = ['# header1']
-    let outLines = ['<h1>header1</h1>']
+    const inLines = ['# header1']
+    const outLines = ['<h1>header1</h1>']
 
     expect(popHeader(inLines)).to.be.deep.equal(outLines)
     expect(inLines.length).to.be.equal(0)
   })
 
   it('multiple header lines', () => {
-    let inLines = [
+    const inLines = [
       '# header1',
       '## header2',
-      '### header3'
+      '### header3',
     ]
-    let outLines = [
+    const outLines = [
       '<h1>header1</h1>',
       '<h2>header2</h2>',
-      '<h3>header3</h3>'
+      '<h3>header3</h3>',
     ]
 
     expect(popHeader(inLines)).to.be.deep.equal(outLines)
@@ -27,13 +27,13 @@ describe('process header', () => {
   })
 
   it('stop at first non-header line', () => {
-    let inLines = [
+    const inLines = [
       '# header1',
       'not a header',
-      '## header2'
+      '## header2',
     ]
-    let outLines = [
-      '<h1>header1</h1>'
+    const outLines = [
+      '<h1>header1</h1>',
     ]
 
     expect(popHeader(inLines)).to.be.deep.equal(outLines)
@@ -41,15 +41,15 @@ describe('process header', () => {
   })
 
   it('trim white spaces for header line', () => {
-    let inLines = [
+    const inLines = [
       '#    header1   ',
       '##   header2   ',
       '###  header3   ',
     ]
-    let outLines = [
+    const outLines = [
       '<h1>header1</h1>',
       '<h2>header2</h2>',
-      '<h3>header3</h3>'
+      '<h3>header3</h3>',
     ]
 
     expect(popHeader(inLines)).to.be.deep.equal(outLines)
@@ -57,12 +57,12 @@ describe('process header', () => {
   })
 
   it('support up to h3 (###)', () => {
-    let inLines = [
+    const inLines = [
       '### header3',
-      '#### header4'
+      '#### header4',
     ]
-    let outLines = [
-      '<h3>header3</h3>'
+    const outLines = [
+      '<h3>header3</h3>',
     ]
 
     expect(popHeader(inLines)).to.be.deep.equal(outLines)

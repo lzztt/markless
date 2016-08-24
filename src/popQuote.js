@@ -1,8 +1,9 @@
 const popQuote = (lines) => {
-  let i, line, quote = []
+  const quote = []
 
+  let i
   for (i = 0; i < lines.length; i++) {
-    line = lines[i]
+    const line = lines[i]
 
     if (line.slice(0, 2) === '> ') {
       quote.push(line.slice(2))
@@ -19,4 +20,4 @@ const popQuote = (lines) => {
   return quote
 }
 
-module.exports = popQuote
+export default popQuote

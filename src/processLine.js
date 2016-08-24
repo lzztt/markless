@@ -1,30 +1,33 @@
-const image = require('./image.js')
-const media = require('./media.js')
-const link = require('./link.js')
-const email = require('./email.js')
-const font = require('./font.js')
+import image from './image'
+import media from './media'
+import link from './link'
+import email from './email'
+import font from './font'
 
 const processLine = (line) => {
-  line = line.trim()
+  const ln = line.trim()
 
-  let ret = image(line)
-  if (ret !== line)
+  let ret = image(ln)
+  if (ret !== ln) {
     return ret
+  }
 
-  ret = media(line)
-  if (ret !== line)
+  ret = media(ln)
+  if (ret !== ln) {
     return ret
+  }
 
-  let segments = line.split('`')
+  const segments = ln.split('`')
   let last = ''
   if (segments.length % 2 === 0) {
     // odd number of '`'
-    last = '`' + segments.pop()
+    last = `\`${segments.pop()}`
   }
 
-  return segments.map((segment, index) => {
-    return index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`
-  }).join('') + last
+  return segments.map(
+    (segment, index) =>
+    (index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`)
+  ).join('') + last
 }
 
-module.exports = processLine
+export default processLine
