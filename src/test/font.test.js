@@ -1,6 +1,4 @@
-import {
-  expect,
-} from 'chai'
+import { expect } from 'chai'
 import font from '../font'
 
 describe('process font style', () => {

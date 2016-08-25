@@ -1,38 +1,37 @@
-/* eslint no-console: "off" */
+/* eslint no-console: 'off' */
 
 const fs = require('fs')
 const rollup = require('rollup').rollup
-const commonjs = require('rollup-plugin-commonjs')
+const babel = require('babel-core')
+const version = require('../package.json').version
 
-function getSize(code) {
-  return `${(code.length / 1024).toFixed(2)}kb`
-}
+const banner = `/*
+ * Markx.js v${version}
+ * (c) ${new Date().getFullYear()} Longzhang Tian
+ * Released under the MIT License
+ */`
 
 function logError(e) {
   console.log(e)
 }
 
-function blue(str) {
-  return `\x1b[1m\x1b[34m${str}\x1b[39m\x1b[22m`
-}
-
-function write(dest, code) {
-  return new Promise((resolve, reject) => {
-    fs.writeFile(dest, code, (err) => {
-      if (err) {
-        reject(err)
-        return
-      }
-      console.log(`${blue(dest)} ${getSize(code)}`)
-      resolve()
-    })
-  })
-}
-
 rollup({
-  entry: 'src/markx.js',
-  plugins: [commonjs()],
-}).then(bundle => write('dist/markx.js', bundle.generate({
+  entry: 'src/processText.js',
+}).then(bundle => bundle.write({
+  banner,
   format: 'cjs',
-  banner: '// banner',
-}).code)).catch(logError)
+  dest: 'build/bundle.js',
+  sourceMap: true,
+})).then(() => {
+  fs.writeFileSync('build/test/bundle.test.js',
+    babel.transform(fs.readFileSync('src/test/processText.test.js', 'utf8').replace(/processText/g, 'bundle'), {
+      "plugins": [
+        ["transform-es2015-modules-commonjs", {
+          "allowTopLevelThis": false,
+          "strict": false,
+          "loose": false,
+        }]
+      ]
+    }).code
+  )
+}).catch(logError)
