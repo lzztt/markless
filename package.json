@@ -5,8 +5,9 @@
   "main": "dist/markx.js",
   "scripts": {
     "build": "babel src -d lib",
-    "bundle": "node bin/bundle.js",
-    "test": "npm run build && mocha lib/test && npm run bundle && mocha build/test/bundle.test.js"
+    "bundle": "mkdir -p build/test && node bin/bundle.js",
+    "test": "npm run build && mocha lib/test && npm run bundle && mocha build/test/bundle.test.js",
+    "dist": "mkdir -p dist && node bin/dist.js"
   },
   "repository": {
     "type": "git",
