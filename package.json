@@ -4,7 +4,7 @@
   "description": "yet another markup language, inspired by markdown",
   "main": "dist/markx.js",
   "scripts": {
-    "build": "babel src -d lib",
+    "build": "babel --plugins transform-es2015-modules-commonjs src -d lib",
     "bundle": "mkdir -p build/test && node bin/bundle.js",
     "test": "npm run build && mocha lib/test && npm run bundle && mocha build/test/bundle.test.js",
     "dist": "mkdir -p dist && node bin/dist.js"
@@ -27,6 +27,7 @@
   "devDependencies": {
     "babel-cli": "^6.11.4",
     "babel-core": "^6.14.0",
+    "babel-plugin-external-helpers": "^6.8.0",
     "babel-preset-es2015": "^6.14.0",
     "chai": "^3.5.0",
     "eslint": "^3.3.1",
@@ -35,6 +36,7 @@
     "eslint-plugin-jsx-a11y": "^2.1.0",
     "eslint-plugin-react": "^6.1.2",
     "mocha": "^3.0.2",
-    "rollup": "^0.34.10"
+    "rollup": "^0.34.10",
+    "rollup-plugin-babel": "^2.6.1"
   }
 }

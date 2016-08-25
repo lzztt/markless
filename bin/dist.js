@@ -1,8 +1,7 @@
 /* eslint no-console: 'off' */
 
-const fs = require('fs')
 const rollup = require('rollup').rollup
-const babel = require('babel-core')
+const babel = require('rollup-plugin-babel')
 const version = require('../package.json').version
 
 const banner = `/*
@@ -13,22 +12,18 @@ const banner = `/*
 
 rollup({
   entry: 'src/processText.js',
-}).then(bundle => {
-  const code = bundle.generate().code
-
-  fs.writeFile('dist/markx.es6.js', code)
-  fs.writeFileSync('dist/markx.es5.js',
-    babel.transform(code, {
+  plugins: [
+    babel({
       presets: [
         ['es2015', {
           modules: false,
         }],
       ],
-    }).code
-  )
-  return rollup({
-    entry: 'dist/markx.es5.js',
-  })
+      plugins: [
+        'external-helpers',
+      ],
+    }),
+  ],
 }).then(bundle => bundle.write({
   banner,
   format: 'iife',
