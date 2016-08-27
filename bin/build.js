@@ -3,43 +3,67 @@
 const fs = require('fs')
 const rollup = require('rollup').rollup
 const babel = require('babel-core')
+const rollupBabel = require('rollup-plugin-babel')
 const readdirp = require('readdirp')
+const version = require('../package.json').version
 
-const stream = readdirp({
-  root: 'src',
-  entryType: 'files',
-  fileFilter: '*.js',
-})
+const banner = `/*!
+ * Markx.js v${version}
+ * (c) ${new Date().getFullYear()} Longzhang Tian
+ * Released under the MIT License
+ */`
 
+// bundle markx
 rollup({
   entry: 'src/processText.js',
+  plugins: [
+    rollupBabel({
+      presets: [
+        ['es2015', {
+          modules: false,
+        }],
+      ],
+      plugins: [
+        'external-helpers',
+      ],
+    }),
+  ],
 }).then(bundle => bundle.write({
+  banner,
   format: 'umd',
-  dest: 'build/bundle.js',
-  moduleId: 'bundle',
-  moduleName: 'bundle',
+  dest: 'build/markx.js',
+  moduleId: 'markx',
+  moduleName: 'markx',
 })).catch(console.log)
 
+// markx test
 fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
   if (rerr) {
     throw rerr
   }
 
-  fs.writeFile('build/test/bundle.test.js',
-    babel.transform(data.replace(/processText/g, 'bundle')
-      .replace(/describe\('(.*)',/g, (match, group1) => `describe('bundle ${group1}',`), {
+  fs.writeFile('build/test/markx.test.js',
+    babel.transform(data.replace(/processText/g, 'markx')
+      .replace(/describe\('(.*)',/g, (match, group1) => `describe('markx ${group1}',`), {
         presets: [
           ['es2015', {
             modules: 'umd',
           }],
         ],
-        moduleId: 'bundleTest',
+        moduleId: 'markxTest',
       }).code,
-    err => {
-      if (err) {
-        throw err
+    werr => {
+      if (werr) {
+        throw werr
       }
     })
+})
+
+// transform individual files and tests
+const stream = readdirp({
+  root: 'src',
+  entryType: 'files',
+  fileFilter: '*.js',
 })
 
 const files = []
@@ -74,21 +98,21 @@ stream.on('warn', err => {
 
   files.push(outFile)
 }).on('end', () => {
-  files.push('build/bundle.js', 'build/test/bundle.test.js')
-  const scripts = files.map(f => `<script src="${f.slice(6)}"></script>`).join('\n')
+  files.push('build/markx.js', 'build/test/markx.test.js')
+  const scripts = files.map(f =>
+    `<script src="${f.replace(/^build/, '..').replace('../test/', '')}"></script>`
+  ).join('\n')
 
-  fs.writeFile('build/test.html', `<html>
+  fs.writeFile('build/test/test.html', `<html>
 <head>
   <meta charset="utf-8">
   <title>Markx Tests</title>
-  <link href="../node_modules/mocha/mocha.css" rel="stylesheet" />
+  <link href="../../node_modules/mocha/mocha.css" rel="stylesheet" />
 </head>
 <body>
   <div id="mocha"></div>
-
-  <script src="../node_modules/chai/chai.js"></script>
-  <script src="../node_modules/mocha/mocha.js"></script>
-
+  <script src="../../node_modules/chai/chai.js"></script>
+  <script src="../../node_modules/mocha/mocha.js"></script>
   <script>mocha.setup('bdd')</script>
 ${scripts}
   <script>
