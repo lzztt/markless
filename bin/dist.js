@@ -61,8 +61,9 @@ rollup({
 }).then(bundle => {
   const code = bundle.generate({
     banner,
-    format: 'iife',
+    format: 'umd',
     moduleName: 'markx',
+    moduleId: 'markx',
   }).code
 
   const res = uglify.minify(code, {
@@ -74,7 +75,7 @@ rollup({
     },
   })
 
-  write('dist/markx.min.js.map', res.map.replace(',"sources":["?"],', ',"sources":["markx.js"],'))
+  write('dist/markx.min.js.map', res.map.replace('"sources":["?"]', '"sources":["markx.js"]'))
 
   return Promise.all([
     write('dist/markx.js', code),
