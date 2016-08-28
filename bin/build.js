@@ -111,7 +111,7 @@ stream.on('warn', err => {
 </head>
 <body>
   <div id="mocha"></div>
-  <script src="../../node_modules/babel-polyfill/dist/ployfill.min.js"></script>
+  <script src="../../node_modules/babel-polyfill/dist/polyfill.min.js"></script>
   <script src="../../node_modules/chai/chai.js"></script>
   <script src="../../node_modules/mocha/mocha.js"></script>
   <script>mocha.setup('bdd')</script>
