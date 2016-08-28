@@ -11,6 +11,7 @@ script:
   - npm run build
   - npm run test
   - npm run dist
+  - npm run browser_test
 after_script:
   - echo "after_script"
 addons:
