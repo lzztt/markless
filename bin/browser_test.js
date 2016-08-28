@@ -13,7 +13,7 @@ const submitJobs = (config) => {
     method: 'POST',
     path: '/rest/v1/longztian/js-tests',
     hostname: 'saucelabs.com',
-    auth: 'longztian:ecd15b59-b05f-4a82-a54f-97e97b859965',
+    auth: `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -23,16 +23,20 @@ const submitJobs = (config) => {
 
   return new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
-      let json = ''
+      const chunks = []
       res.on('data', (chunk) => {
-        json += chunk
+        chunks.push(chunk)
       })
       res.on('error', (err) => {
         throw err
       })
       res.on('end', () => {
-        console.log(`saucelabs jobs: ${json}`)
-        const jobs = JSON.parse(json)
+        const jobs = JSON.parse(chunks.join(''))
+        if ('error' in jobs) {
+          reject(`Error: ${jobs.error}`)
+        }
+
+        console.log(`saucelabs jobs: ${chunks.join('')}`)
         if (jobs) {
           resolve(jobs)
         } else {
@@ -70,15 +74,15 @@ const checkJobStatus = (jobs) => {
 
   const queryStatus = () => new Promise((resolve, reject) => {
     const req = https.request(options, (res) => {
-      let json = ''
+      const chunks = []
       res.on('data', (chunk) => {
-        json += chunk
+        chunks.push(chunk)
       })
       res.on('error', (err) => {
         throw err
       })
       res.on('end', () => {
-        const status = JSON.parse(json)
+        const status = JSON.parse(chunks.join(''))
         if (status) {
           resolve(status)
         } else {
