@@ -7,7 +7,8 @@
     "lint": "node_modules/.bin/eslint src bin",
     "build": "rm -rf build && mkdir -p build/test && node bin/build.js",
     "test": "mocha build/test",
-    "dist": "mkdir -p dist && cp build/markx.js dist && node_modules/.bin/uglifyjs dist/markx.js -m -c -p relative --source-map dist/markx.min.js.map -o dist/markx.min.js"
+    "dist": "mkdir -p dist && cp build/markx.js dist && node_modules/.bin/uglifyjs dist/markx.js -m -c -p relative --source-map dist/markx.min.js.map -o dist/markx.min.js",
+    "server": "node bin/server.js &"
   },
   "repository": {
     "type": "git",
@@ -39,6 +40,7 @@
     "readdirp": "^2.1.0",
     "rollup": "^0.34.10",
     "rollup-plugin-babel": "^2.6.1",
+    "serve-static": "^1.11.1",
     "uglify-js": "^2.7.3"
   }
 }

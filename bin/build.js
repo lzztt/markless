@@ -116,8 +116,39 @@ stream.on('warn', err => {
   <script>mocha.setup('bdd')</script>
 ${scripts}
   <script>
-    mocha.checkLeaks();
-    mocha.run();
+    onload = function() {
+      mocha.checkLeaks();
+      mocha.globals(['mochaResults']);
+      var runner = mocha.run();
+
+      // Reporting JavaScript Unit Test Results to Sauce Labs with Mocha
+      var failedTests = [];
+      runner.on('end', function() {
+        window.mochaResults = runner.stats;
+        window.mochaResults.reports = failedTests;
+      });
+
+      runner.on('fail', logFailure);
+
+      var flattenTitles = function(test) {
+        var titles = [];
+        while (test.parent.title) {
+          titles.push(test.parent.title);
+          test = test.parent;
+        }
+        return titles.reverse();
+      };
+
+      function logFailure(test, err) {
+        failedTests.push({
+          name: test.title,
+          result: false,
+          message: err.message,
+          stack: err.stack,
+          titles: flattenTitles(test)
+        });
+      };
+    };
   </script>
 </body>
 </html>`)

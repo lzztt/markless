@@ -13,3 +13,5 @@ script:
   - npm run dist
 after_script:
   - echo "after_script"
+addons:
+  sauce_connect: true
