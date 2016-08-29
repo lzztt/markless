@@ -14,5 +14,3 @@ script:
   - if node --version | grep -c v6 >/dev/null; then export BUILD=`git rev-parse HEAD`; export NODE=`node --version`; npm run browser_test; fi
 after_script:
   - if node --version | grep -c v6 >/dev/null; then travis_stop_sauce_connect; fi
-addons:
-  sauce_connect: true
