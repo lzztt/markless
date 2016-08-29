@@ -62,6 +62,14 @@ module.exports = {
     platform: 'OS X 10.11',
     version: '9.0',
   }, {
+    browserName: 'iphone',
+    platform: 'OS X 10.9',
+    version: '7.1',
+  }, {
+    browserName: 'android',
+    platform: 'Linux',
+    version: '4.2',
+  }, {
     browserName: 'Safari',
     appiumVersion: '1.5.3',
     deviceName: 'iPhone 6s Simulator',
