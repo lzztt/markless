@@ -1,32 +1,31 @@
 {
-  "name": "markx",
+  "name": "markless",
   "version": "0.0.1",
   "description": "yet another markup language, inspired by markdown",
-  "main": "dist/markx.js",
+  "main": "dist/markless.js",
   "scripts": {
     "lint": "node_modules/.bin/eslint src bin",
     "build": "rm -rf build && mkdir -p build/test && node bin/build.js",
     "test": "mocha build/test",
-    "dist": "mkdir -p dist && cp build/markx.js dist && node_modules/.bin/uglifyjs dist/markx.js -m -c -p relative --source-map dist/markx.min.js.map -o dist/markx.min.js",
+    "dist": "mkdir -p dist && cp build/markless.js dist && node_modules/.bin/uglifyjs dist/markless.js -m -c -p relative --source-map dist/markless.min.js.map -o dist/markless.min.js",
     "browser_test": "node bin/browser_test.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/longztian/markx.git"
+    "url": "git+https://github.com/longztian/markless.git"
   },
   "keywords": [
-    "markx",
+    "markless",
     "markdown",
     "markup"
   ],
   "author": "Longzhang Tian",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/longztian/markx/issues"
+    "url": "https://github.com/longztian/markless/issues"
   },
-  "homepage": "https://github.com/longztian/markx#readme",
+  "homepage": "https://github.com/longztian/markless#readme",
   "devDependencies": {
-    "babel-cli": "^6.11.4",
     "babel-core": "^6.14.0",
     "babel-plugin-external-helpers": "^6.8.0",
     "babel-preset-es2015": "^6.14.0",

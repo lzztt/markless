@@ -8,12 +8,12 @@ const readdirp = require('readdirp')
 const version = require('../package.json').version
 
 const banner = `/*!
- * Markx.js v${version}
+ * MarkLess.js v${version}
  * (c) ${new Date().getFullYear()} Longzhang Tian
  * Released under the MIT License
  */`
 
-// bundle markx
+// bundle markless
 rollup({
   entry: 'src/processText.js',
   plugins: [
@@ -31,26 +31,26 @@ rollup({
 }).then(bundle => bundle.write({
   banner,
   format: 'umd',
-  dest: 'build/markx.js',
-  moduleId: 'markx',
-  moduleName: 'markx',
+  dest: 'build/markless.js',
+  moduleId: 'markless',
+  moduleName: 'markless',
 })).catch(console.log)
 
-// markx test
+// markless test
 fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
   if (rerr) {
     throw rerr
   }
 
-  fs.writeFile('build/test/markx.test.js',
-    babel.transform(data.replace(/processText/g, 'markx')
-      .replace(/describe\('(.*)',/g, (match, group1) => `describe('markx ${group1}',`), {
+  fs.writeFile('build/test/markless.test.js',
+    babel.transform(data.replace(/processText/g, 'markless')
+      .replace(/describe\('(.*)',/g, (match, group1) => `describe('markless ${group1}',`), {
         presets: [
           ['es2015', {
             modules: 'umd',
           }],
         ],
-        moduleId: 'markxTest',
+        moduleId: 'marklessTest',
       }).code,
     werr => {
       if (werr) {
@@ -98,7 +98,7 @@ stream.on('warn', err => {
 
   files.push(outFile)
 }).on('end', () => {
-  files.push('build/markx.js', 'build/test/markx.test.js')
+  files.push('build/markless.js', 'build/test/markless.test.js')
   const scripts = files.map(f =>
     `<script src="${f.replace(/^build/, '..').replace('../test/', '')}"></script>`
   ).join('\n')
@@ -106,7 +106,7 @@ stream.on('warn', err => {
   fs.writeFile('build/test/test.html', `<html>
 <head>
   <meta charset="utf-8">
-  <title>Markx Tests</title>
+  <title>MarkLess Tests</title>
   <link href="../../node_modules/mocha/mocha.css" rel="stylesheet" />
 </head>
 <body>
