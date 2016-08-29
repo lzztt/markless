@@ -4,6 +4,12 @@ const http = require('http')
 const serveStatic = require('serve-static')
 const conf = require('./saucelabs.conf')
 
+if (!conf.build || !conf.tunnelIdentifier) {
+  throw new Error(`invalid sauce lib config: build=${conf.build} tunnel=${conf.tunnelIdentifier}`)
+}
+
+const sauceAuth = `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`
+
 const submitJobs = (config) => {
   const data = config
   data.platforms = data.platforms.filter(p => !('appiumVersion' in p)).map(p => [p.platform, p.browserName, p.version])
@@ -13,7 +19,7 @@ const submitJobs = (config) => {
     method: 'POST',
     path: '/rest/v1/longztian/js-tests',
     hostname: 'saucelabs.com',
-    auth: `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`,
+    auth: sauceAuth,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -64,7 +70,7 @@ const checkJobStatus = (jobs) => {
     method: 'POST',
     path: '/rest/v1/longztian/js-tests/status',
     hostname: 'saucelabs.com',
-    auth: `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`,
+    auth: sauceAuth,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
