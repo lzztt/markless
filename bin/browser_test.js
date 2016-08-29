@@ -8,6 +8,10 @@ if (!conf.build || !conf.tunnelIdentifier) {
   throw new Error(`invalid sauce lib config: build=${conf.build} tunnel=${conf.tunnelIdentifier}`)
 }
 
+const port = 9000
+const page = '/build/test/test.html'
+conf.url = `http://localhost:${port}${page}`
+
 const sauceAuth = `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`
 
 const submitJobs = (config) => {
@@ -42,7 +46,7 @@ const submitJobs = (config) => {
           reject(`Error: ${jobs.error}`)
         }
 
-        console.log(`saucelabs jobs: ${chunks.join('')}`)
+        console.log(`number of submited jobs: ${jobs['js tests'].length}`)
         if (jobs) {
           resolve(jobs)
         } else {
@@ -157,9 +161,10 @@ const next = err => {
 }
 
 // Create server
+let iRequest = 0
 const server = http.createServer((req, res) => {
-  if (req.url.endsWith('.html')) {
-    console.log(`server get request: ${req.socket.remoteAddress}: ${req.url}`)
+  if (req.url === page) {
+    console.log(`get test request ${++iRequest}: ${req.headers['user-agent']}`)
   }
   serve(req, res, next)
 })
