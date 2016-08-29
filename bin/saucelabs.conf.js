@@ -2,7 +2,7 @@ module.exports = {
   name: `markx #${process.env.BUILD.slice(0, 7)} @ node ${process.env.NODE}`,
   build: process.env.BUILD,
   tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
-  "recordVideo": false,
+  recordVideo: false,
   framework: 'mocha',
   url: 'http://localhost:9000/build/test/test.html',
   platforms: [{
