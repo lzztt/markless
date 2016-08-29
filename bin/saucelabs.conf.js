@@ -1,6 +1,6 @@
 module.exports = {
-  name: `markx #${process.env.BUILD.slice(0, 7)} @ node ${process.env.NODE}`,
-  build: process.env.BUILD,
+  name: `markx #${process.env.TRAVIS_BUILD_NUMBER} @ node ${process.env.TRAVIS_NODE_VERSION}`,
+  build: process.env.TRAVIS_BUILD_NUMBER,
   tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
   recordVideo: false,
   framework: 'mocha',
