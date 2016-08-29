@@ -152,7 +152,14 @@ const next = err => {
 
 // Create server
 const server = http.createServer((req, res) => {
+  if (req.url.endsWith('.html')) {
+    console.log(`server get request: ${req.socket.remoteAddress}: ${req.url}`)
+  }
   serve(req, res, next)
+})
+
+server.on('err', err => {
+  console.log(`http server error: ${err}`)
 })
 
 // start the server
