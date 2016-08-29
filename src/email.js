@@ -1,6 +1,6 @@
 const email = (line) => {
   // can be any part of the line
-  if (line.indexOf('@') === -1) {
+  if (!line.includes('@')) {
     return line
   }
 
