@@ -1,0 +1,7 @@
+/bin
+/build
+/src
+.editorconfig
+.eslintrc.json
+.gitignore
+.travis.yml
