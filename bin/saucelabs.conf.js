@@ -1,5 +1,5 @@
 module.exports = {
-  name: `markx #${process.env.TRAVIS_BUILD_NUMBER} @ node ${process.env.TRAVIS_NODE_VERSION}`,
+  name: `markless #${process.env.TRAVIS_BUILD_NUMBER} @ node ${process.env.TRAVIS_NODE_VERSION}`,
   build: process.env.TRAVIS_BUILD_NUMBER,
   tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
   recordVideo: false,
