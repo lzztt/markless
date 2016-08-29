@@ -1,10 +1,9 @@
 module.exports = {
-  name: `markless #${process.env.TRAVIS_BUILD_NUMBER} @ node ${process.env.TRAVIS_NODE_VERSION}`,
+  name: `markless #${process.env.TRAVIS_BUILD_NUMBER} @ node ${process.version}`,
   build: process.env.TRAVIS_BUILD_NUMBER,
   tunnelIdentifier: process.env.TRAVIS_JOB_NUMBER,
   recordVideo: false,
   framework: 'mocha',
-  url: 'http://localhost:9000/build/test/test.html',
   platforms: [{
     browserName: 'internet explorer',
     platform: 'Windows 7',
