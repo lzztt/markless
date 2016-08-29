@@ -64,11 +64,11 @@ module.exports = {
   }, {
     browserName: 'iphone',
     platform: 'OS X 10.9',
-    version: '7.1',
+    version: '9.3',
   }, {
     browserName: 'android',
     platform: 'Linux',
-    version: '4.2',
+    version: '4.4',
   }, {
     browserName: 'Safari',
     appiumVersion: '1.5.3',
