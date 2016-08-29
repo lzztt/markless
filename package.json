@@ -1,6 +1,6 @@
 {
   "name": "markless",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "yet another markup language, inspired by markdown",
   "main": "dist/markless.js",
   "scripts": {
