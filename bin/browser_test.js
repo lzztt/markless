@@ -79,6 +79,7 @@ const checkJobStatus = (jobs) => {
         chunks.push(chunk)
       })
       res.on('error', (err) => {
+        console.log(err)
         throw err
       })
       res.on('end', () => {
@@ -92,6 +93,7 @@ const checkJobStatus = (jobs) => {
     })
 
     req.on('error', (err) => {
+      console.log(err)
       throw err
     })
 
@@ -126,6 +128,7 @@ const checkJobStatus = (jobs) => {
           resolve()
         }
       }).catch(err => {
+        console.log(err)
         throw err
       })
     }, 10 * 1000)
@@ -141,7 +144,11 @@ const checkJobStatus = (jobs) => {
 
 // Serve up module's root folder
 const serve = serveStatic('.')
-const next = () => {}
+const next = err => {
+  if (err) {
+    console.log(err)
+  }
+}
 
 // Create server
 const server = http.createServer((req, res) => {
