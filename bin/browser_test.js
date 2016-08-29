@@ -64,7 +64,7 @@ const checkJobStatus = (jobs) => {
     method: 'POST',
     path: '/rest/v1/longztian/js-tests/status',
     hostname: 'saucelabs.com',
-    auth: 'longztian:ecd15b59-b05f-4a82-a54f-97e97b859965',
+    auth: `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
