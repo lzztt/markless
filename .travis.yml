@@ -11,8 +11,6 @@ script:
   - npm run build
   - npm run test
   - npm run dist
-  - if node --version | grep -c v6 >/dev/null; then npm run browser_test; fi
 after_script:
   - echo "end tests"
-addons:
-  sauce_connect: true
+
