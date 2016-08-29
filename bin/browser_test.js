@@ -130,11 +130,11 @@ const checkJobStatus = (jobs) => {
       })
     }, 10 * 1000)
 
-    // timeout after 10 minutes
+    // timeout after 1 hour
     setTimeout(() => {
       clearInterval(timer)
       reject('browser test jobs timeout')
-    }, 600 * 1000)
+    }, 3600 * 1000)
   })
 }
 
