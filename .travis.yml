@@ -12,7 +12,7 @@ script:
   - npm run build
   - npm run test
   - npm run dist
-  - npm run browser_test
+  - if node --version | grep -c v6 >/dev/null; then npm run browser_test; fi
 after_script:
   - echo "after_script"
 addons:
