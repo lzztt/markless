@@ -8,148 +8,97 @@ if (!conf.build || !conf.tunnelIdentifier) {
   throw new Error(`invalid sauce lib config: build=${conf.build} tunnel=${conf.tunnelIdentifier}`)
 }
 
+const sauceAuth = `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`
 const port = 9000
 const page = '/build/test/test.html'
-conf.url = `http://localhost:${port}${page}`
 
-const sauceAuth = `${process.env.SAUCE_USERNAME}:${process.env.SAUCE_ACCESS_KEY}`
+const post = (endpoint, data) => new Promise((resolve, reject) => {
+  const body = JSON.stringify(data)
+  const req = https.request({
+    method: 'POST',
+    path: `/rest/v1/longztian/${endpoint}`,
+    hostname: 'saucelabs.com',
+    auth: sauceAuth,
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Content-Length': body != null ? Buffer.byteLength(body) : 0,
+    },
+  }, (res) => {
+    const chunks = []
+    res.on('data', (chunk) => {
+      chunks.push(chunk)
+    })
+    res.on('error', (err) => {
+      throw err
+    })
+    res.on('end', () => {
+      const ret = JSON.parse(chunks.join(''))
+      if ('error' in ret) {
+        reject(`got response with error: ${ret.error}`)
+      }
+
+      if (ret) {
+        resolve(ret)
+      } else {
+        reject('no response returned')
+      }
+    })
+  })
+
+  req.on('error', (err) => {
+    throw err
+  })
+
+  // post the data
+  if (body != null) {
+    req.write(body)
+  }
+
+  req.end()
+})
 
 const submitJobs = (config) => {
-  const data = config
-  data.platforms = data.platforms.filter(p => !('appiumVersion' in p)).map(p => [p.platform, p.browserName, p.version])
-  const body = JSON.stringify(data)
+  const tests = config
+  tests.url = `http://localhost:${port}${page}`
+  tests.platforms = tests.platforms.filter(p => !('appiumVersion' in p)).map(p => [p.platform, p.browserName, p.version])
 
-  const options = {
-    method: 'POST',
-    path: '/rest/v1/longztian/js-tests',
-    hostname: 'saucelabs.com',
-    auth: sauceAuth,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'Content-Length': body != null ? Buffer.byteLength(body) : 0,
-    },
-  }
-
-  return new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      const chunks = []
-      res.on('data', (chunk) => {
-        chunks.push(chunk)
-      })
-      res.on('error', (err) => {
-        throw err
-      })
-      res.on('end', () => {
-        const jobs = JSON.parse(chunks.join(''))
-        if ('error' in jobs) {
-          reject(`Error: ${jobs.error}`)
-        }
-
-        console.log(`number of submited jobs: ${jobs['js tests'].length}`)
-        if (jobs) {
-          resolve(jobs)
-        } else {
-          reject('no job ids returned')
-        }
-      })
-    })
-
-    req.on('error', (err) => {
-      throw err
-    })
-
-    // post the data
-    if (body != null) {
-      req.write(body)
-    }
-
-    req.end()
-  })
+  return post('js-tests', tests)
 }
 
-const checkJobStatus = (jobs) => {
-  const body = JSON.stringify(jobs)
-  const options = {
-    method: 'POST',
-    path: '/rest/v1/longztian/js-tests/status',
-    hostname: 'saucelabs.com',
-    auth: sauceAuth,
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      'Content-Length': body != null ? Buffer.byteLength(body) : 0,
-    },
-  }
+const checkJobStatus = (jobs) => new Promise((resolve, reject) => {
+  const timer = setInterval(() => {
+    post('js-tests/status', jobs).then(status => {
+      // not completed yet
+      if (!status.completed) {
+        const pendingJobs = status['js tests'].filter(job => !job.result)
+        console.log(`waiting for pending jobs: ${pendingJobs.length}`)
+        return
+      }
 
-  const queryStatus = () => new Promise((resolve, reject) => {
-    const req = https.request(options, (res) => {
-      const chunks = []
-      res.on('data', (chunk) => {
-        chunks.push(chunk)
-      })
-      res.on('error', (err) => {
-        console.log(err)
-        throw err
-      })
-      res.on('end', () => {
-        const status = JSON.parse(chunks.join(''))
-        if (status) {
-          resolve(status)
-        } else {
-          reject('no job status returned')
-        }
-      })
-    })
+      const failedJobs = status['js tests'].filter(job => !job.result || job.result.tests !== job.result.passes)
+      console.log(`successed jobs: ${status['js tests'].length - failedJobs.length}`)
+      console.log(`failed    jobs: ${failedJobs.length}`)
 
-    req.on('error', (err) => {
-      console.log(err)
-      throw err
-    })
-
-    // post the data
-    if (body != null) {
-      req.write(body)
-    }
-
-    req.end()
-  })
-
-  return new Promise((resolve, reject) => {
-    const timer = setInterval(() => {
-      queryStatus().then(status => {
-        // not completed yet
-        if (!status.completed) {
-          const pendingJobs = status['js tests'].filter(job => !job.result)
-          console.log(`waiting for pending jobs: ${pendingJobs.length}`)
-          return
-        }
-
-        const failedJobs = status['js tests'].filter(job => !job.result || job.result.tests !== job.result.passes)
-        console.log(`successed jobs: ${status['js tests'].length - failedJobs.length}`)
-        console.log(`failed    jobs: ${failedJobs.length}`)
-
-        // completed
-        clearInterval(timer)
-
-        if (failedJobs.length > 0) {
-          reject(`${failedJobs.length} jobs failed`)
-        } else {
-          resolve()
-        }
-      }).catch(err => {
-        console.log(err)
-        throw err
-      })
-    }, 10 * 1000)
-
-    // timeout after 1 hour
-    setTimeout(() => {
+      // completed
       clearInterval(timer)
-      reject('browser test jobs timeout')
-    }, 3600 * 1000)
-  })
-}
+
+      if (failedJobs.length > 0) {
+        reject(`${failedJobs.length} jobs failed`)
+      } else {
+        resolve()
+      }
+    }).catch(err => {
+      reject(err)
+    })
+  }, 10 * 1000)
+
+  // timeout after 1 hour
+  setTimeout(() => {
+    clearInterval(timer)
+    reject('browser test jobs timeout')
+  }, 3600 * 1000)
+})
 
 
 // Serve up module's root folder
@@ -161,10 +110,10 @@ const next = err => {
 }
 
 // Create server
-let iRequest = 0
+let i = 0
 const server = http.createServer((req, res) => {
   if (req.url === page) {
-    console.log(`get test request ${++iRequest}: ${req.headers['user-agent']}`)
+    console.log(`get test client ${++i}: ${req.headers['user-agent']}`)
   }
   serve(req, res, next)
 })
@@ -174,11 +123,14 @@ server.on('err', err => {
 })
 
 // start the server
-server.listen(9000, () => {
-  console.log('web server started at localhost:9000')
+server.listen(port, () => {
+  console.log(`web server started at localhost:${port}`)
 
   submitJobs(conf)
-    .then(jobs => checkJobStatus(jobs))
+    .then(jobs => {
+      console.log(`number of submited jobs: ${jobs['js tests'].length}`)
+      return checkJobStatus(jobs)
+    })
     .then(() => {
       server.close()
       process.exit(0)
