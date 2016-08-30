@@ -16,7 +16,7 @@ const post = (endpoint, data) => new Promise((resolve, reject) => {
   const body = JSON.stringify(data)
   const req = https.request({
     method: 'POST',
-    path: `/rest/v1/longztian/${endpoint}`,
+    path: `/rest/v1/${process.env.SAUCE_USERNAME}/${endpoint}`,
     hostname: 'saucelabs.com',
     auth: sauceAuth,
     headers: {
