@@ -111,7 +111,9 @@ const server = http.createServer((req, res) => {
   if (req.url === page) {
     console.log(`get test client ${++i}: ${req.headers['user-agent']}`)
   }
-  serve(req, res, finalhandler(req, res))
+  serve(req, res, finalhandler(req, res, {
+    onerror: console.error,
+  }))
 })
 
 server.on('err', err => {
