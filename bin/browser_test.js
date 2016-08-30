@@ -2,6 +2,7 @@
 const https = require('https')
 const http = require('http')
 const serveStatic = require('serve-static')
+const finalhandler = require('finalhandler')
 const conf = require('./saucelabs.conf')
 
 if (!conf.build || !conf.tunnelIdentifier) {
@@ -103,11 +104,6 @@ const checkJobStatus = (jobs) => new Promise((resolve, reject) => {
 
 // Serve up module's root folder
 const serve = serveStatic('.')
-const next = err => {
-  if (err) {
-    console.log(err)
-  }
-}
 
 // Create server
 let i = 0
@@ -115,7 +111,7 @@ const server = http.createServer((req, res) => {
   if (req.url === page) {
     console.log(`get test client ${++i}: ${req.headers['user-agent']}`)
   }
-  serve(req, res, next)
+  serve(req, res, finalhandler(req, res))
 })
 
 server.on('err', err => {
