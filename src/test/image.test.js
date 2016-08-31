@@ -124,6 +124,42 @@ describe('process image', () => {
     }
   })
 
+  it('linked image', () => {
+    const inLines = [
+      '[http://www.example.com /data/image-1.jpg]',
+      '[http://www.example.com http://example.com/data/image-1.jpg]',
+    ]
+    const outLines = [
+      '<a href="http://www.example.com"><img src="/data/image-1.jpg"></a>',
+      '<a href="http://www.example.com"><img src="http://example.com/data/image-1.jpg"></a>',
+    ]
+    for (let i = 0; i < inLines.length; i++) {
+      expect(image(inLines[i])).to.be.equal(outLines[i])
+    }
+  })
+
+  it('linked image need to be a whole line', () => {
+    const inLines = [
+      ' [http://www.example.com /data/image-1.jpg]',
+      '1[http://www.example.com /data/image-1.jpg]',
+      't[http://www.example.com /data/image-1.jpg]',
+      '[http://www.example.com http://example.com/data/image-1.jpg] ',
+      '[http://www.example.com http://example.com/data/image-1.jpg]1',
+      '[http://www.example.com http://example.com/data/image-1.jpg]t',
+    ]
+    const outLines = [
+      ' [http://www.example.com /data/image-1.jpg]',
+      '1[http://www.example.com /data/image-1.jpg]',
+      't[http://www.example.com /data/image-1.jpg]',
+      '[http://www.example.com http://example.com/data/image-1.jpg] ',
+      '[http://www.example.com http://example.com/data/image-1.jpg]1',
+      '[http://www.example.com http://example.com/data/image-1.jpg]t',
+    ]
+    for (let i = 0; i < inLines.length; i++) {
+      expect(image(inLines[i])).to.be.equal(outLines[i])
+    }
+  })
+
   it('relative image uri with text title', () => {
     const inLines = [
       '[text /data/image-1.jpg]',
@@ -271,6 +307,8 @@ describe('process image', () => {
       '[text title  /data/image-1.jpg]',
       '[text title  http://example.com/data/image-1.jpg]',
       '[text title  https://img.example.com/data/image-1.jpg]',
+      '[http://www.example.com  /data/image-1.jpg]',
+      '[http://www.example.com  http://example.com/data/image-1.jpg]',
     ]
     const outLines = [
       '<figure><figcaption>text title</figcaption><img src="/data/image-1.jpg"></figure>',
@@ -279,6 +317,8 @@ describe('process image', () => {
       '[text title  /data/image-1.jpg]',
       '[text title  http://example.com/data/image-1.jpg]',
       '[text title  https://img.example.com/data/image-1.jpg]',
+      '[http://www.example.com  /data/image-1.jpg]',
+      '[http://www.example.com  http://example.com/data/image-1.jpg]',
     ]
 
     for (let i = 0; i < inLines.length; i++) {
