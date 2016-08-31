@@ -32,6 +32,44 @@ text text`
     expect(processText(input)).to.be.equal(output)
   })
 
+  it('pagagraph with inline images', () => {
+    const input = `text text
+/data/image-1.jpg
+[http://www.example.com /data/image-1.jpg]
+http://example.com/data/image-1.jpg
+text text`
+    const output = '<p>text text</p>' +
+      '<p><img src="/data/image-1.jpg"> ' +
+      '<a href="http://www.example.com"><img src="/data/image-1.jpg"></a> ' +
+      '<img src="http://example.com/data/image-1.jpg"></p>' +
+      '<p>text text</p>'
+    expect(processText(input)).to.be.equal(output)
+  })
+
+  it('paragraph with block image', () => {
+    const input = `text text
+/data/image-1.jpg
+[text /data/image-1.jpg]
+http://example.com/data/image-1.jpg
+text text`
+    const output = '<p>text text</p>' +
+      '<p><img src="/data/image-1.jpg"></p>' +
+      '<figure><figcaption>text</figcaption><img src="/data/image-1.jpg"></figure>' +
+      '<p><img src="http://example.com/data/image-1.jpg"></p>' +
+      '<p>text text</p>'
+    expect(processText(input)).to.be.equal(output)
+  })
+
+  it('pagagraph with media', () => {
+    const input = `text text
+https://www.youtube.com/watch?v=lkrlNGLtidg
+text text`
+    const output = '<p>text text</p>' +
+      '<iframe width="420" height="315" src="https://www.youtube.com/embed/lkrlNGLtidg" frameborder="0" allowfullscreen></iframe>' +
+      '<p>text text</p>'
+    expect(processText(input)).to.be.equal(output)
+  })
+
   it('paragraph with quote', () => {
     const input = `text text
 > quote 1
