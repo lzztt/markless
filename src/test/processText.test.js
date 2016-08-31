@@ -5,7 +5,7 @@ describe('process text', () => {
   it('plain text paragraph', () => {
     const input = `text text
 text text`
-    const output = '<p>text text<br>text text</p>'
+    const output = '<p>text text text text</p>'
 
     expect(processText(input)).to.be.equal(output)
   })
@@ -38,7 +38,7 @@ text text`
 > quote 2
 text text`
     const output = '<p>text text</p>' +
-      '<blockquote>quote 1<br>quote 2</blockquote>' +
+      '<blockquote>quote 1 quote 2</blockquote>' +
       '<p>text text</p>'
 
     expect(processText(input)).to.be.equal(output)
@@ -80,7 +80,7 @@ text text`
 - item 3
 - item 4`
     const output = '<p>text text</p>' +
-      '<ol><li>item 1<br>item 1 <u>underline</u></li><li>item 2</li></ol>' +
+      '<ol><li>item 1 item 1 <u>underline</u></li><li>item 2</li></ol>' +
       '<blockquote>text text</blockquote>' +
       '<ul><li>item 3</li><li>item 4</li></ul>'
 
@@ -95,7 +95,7 @@ text text`
 > - item 3
 > - item 4`
     const output = '<p>text text</p><blockquote><p>text text</p>' +
-      '<ol><li>item 1<br>item 1 <u>underline</u></li></ol>' +
+      '<ol><li>item 1 item 1 <u>underline</u></li></ol>' +
       '<ul><li>item 3</li><li>item 4</li></ul></blockquote>'
 
     expect(processText(input)).to.be.equal(output)
@@ -112,7 +112,7 @@ text text`
   > quote 3
 - item 4`
     const output = '<p>text text</p>' +
-      '<ol><li><p>item 1</p><blockquote>quote 1<br>quote 2 <b>bold</b></blockquote>' +
+      '<ol><li><p>item 1</p><blockquote>quote 1 quote 2 <b>bold</b></blockquote>' +
       '<p>item 1 <u>underline</u></p></li><li>item 2</li></ol>' +
       '<ul><li><p>item 3</p><blockquote>quote 3</blockquote></li><li>item 4</li></ul>'
 
@@ -132,7 +132,7 @@ text text`
 - item 4
   - item 41`
     const output = '<p>text text</p>' +
-      '<ol><li><p>item 1</p><ul><li>item 11<br>item 11 <u>underline</u></li></ul>' +
+      '<ol><li><p>item 1</p><ul><li>item 11 item 11 <u>underline</u></li></ul>' +
       '<p>item 1 <b>bold</b></p></li>' +
       '<li>item 2<ol><li>item 21</li></ol></li></ol>' +
       '<ul><li>item 3<ol><li>item 31</li></ol></li>' +

@@ -5,23 +5,13 @@ import popQuote from './popQuote'
 import popList from './popList'
 import processLine from './processLine'
 
-class HeaderBlock {
-  constructor(line) {
-    this.line = line
-  }
-
-  toString() {
-    return this.line
-  }
-}
-
 class ParagraphBlock {
   constructor(lines) {
     this.lines = lines
   }
 
   getInnerText() {
-    return this.lines.map(processLine).join('<br>')
+    return this.lines.join(' ')
   }
 
   toString() {
@@ -79,7 +69,7 @@ const processLines = (lines) => {
   let paragraphLines = []
   const processParagraph = () => {
     if (paragraphLines.length > 0) {
-      blocks.push(new ParagraphBlock(paragraphLines))
+      blocks.push(new ParagraphBlock(paragraphLines.map(ln => ln.body)))
       paragraphLines = []
     }
   }
@@ -96,7 +86,7 @@ const processLines = (lines) => {
     let retLines = popHeader(lines)
     if (retLines.length > 0) {
       processParagraph()
-      blocks.push(...retLines.map(line => new HeaderBlock(line)))
+      blocks.push(...retLines)
       continue
     }
 
@@ -117,7 +107,22 @@ const processLines = (lines) => {
     }
 
     // just a normal paragraph line
-    paragraphLines.push(lines.shift())
+    // can be image, media, or styled text
+    const line = processLine(lines.shift())
+
+    // block line
+    if (line.type === 'blockImage' || line.type === 'media') {
+      processParagraph()
+      blocks.push(line.body)
+      continue
+    }
+
+    // process existing paragraph lines
+    if (paragraphLines.length > 0 && line.type !== paragraphLines[0].type) {
+      processParagraph()
+    }
+    // add paragraph line
+    paragraphLines.push(line)
   }
 
   processParagraph()

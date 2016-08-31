@@ -23,7 +23,9 @@ describe('process line', () => {
     ]
 
     for (let i = 0; i < inLines.length; i++) {
-      expect(processLine(inLines[i])).to.be.equal(outLines[i])
+      const line = processLine(inLines[i])
+      expect(line.type).to.be.equal('text')
+      expect(line.body).to.be.equal(outLines[i])
     }
   })
 })
