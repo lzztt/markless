@@ -9,12 +9,18 @@ const processLine = (line) => {
 
   let ret = image(ln)
   if (ret !== ln) {
-    return ret
+    return {
+      type: ret.startsWith('<figure') ? 'blockImage' : 'inlineImage',
+      body: ret,
+    }
   }
 
   ret = media(ln)
   if (ret !== ln) {
-    return ret
+    return {
+      type: 'media',
+      body: ret,
+    }
   }
 
   const segments = ln.split('`')
@@ -24,10 +30,13 @@ const processLine = (line) => {
     last = `\`${segments.pop()}`
   }
 
-  return segments.map(
-    (segment, index) =>
-    (index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`)
-  ).join('') + last
+  return {
+    type: 'text',
+    body: segments.map(
+      (segment, index) =>
+      (index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`)
+    ).join('') + last,
+  }
 }
 
 export default processLine
