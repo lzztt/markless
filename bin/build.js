@@ -59,6 +59,9 @@ fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
     })
 })
 
+const helper = 'babel_helpers.js'
+fs.writeFile(`build/${helper}`, babel.buildExternalHelpers())
+
 // transform individual files and tests
 const stream = readdirp({
   root: 'src',
@@ -91,7 +94,7 @@ stream.on('warn', err => {
         ],
         moduleId: entry.path.split('/').pop().slice(0, -3)
           .replace(/\.(.)/g, (match, group1) => group1.toUpperCase()),
-      }).code.replace('{', '{\n/* istanbul ignore next */'),
+      }).code.replace('{', '{\n  /* istanbul ignore next */'),
       werr => {
         if (werr) {
           throw werr
@@ -118,6 +121,7 @@ stream.on('warn', err => {
   <script src="../../node_modules/chai/chai.js"></script>
   <script src="../../node_modules/mocha/mocha.js"></script>
   <script>mocha.setup('bdd')</script>
+  <script src="../${helper}"></script>
 ${scripts}
   <script>
     onload = function() {
