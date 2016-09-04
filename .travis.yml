@@ -11,7 +11,7 @@ script:
   - npm run build
   - npm run test
   - npm run dist
-  - if node --version | grep -c v6 >/dev/null; then npm run cbtest; fi
+  - if node --version | grep -c v6 >/dev/null; then make test-travis; fi
 after_script:
   - echo "end tests"
 after_success:
