@@ -9,7 +9,7 @@ before_script:
 script:
   - npm run lint
   - npm run build
-  - npm run cover
+  - make test-travis
   - npm run dist
   - if node --version | grep -c v6 >/dev/null; then make test-browser; fi
 after_script:
