@@ -10,16 +10,16 @@ build: $(SRC)
 
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
-		$(TESTS) \
-		--bail
+		--bail \
+		$(TESTS)
 
 test-cov:
 	@NODE_ENV=test node \
 		./node_modules/.bin/istanbul cover \
 		./node_modules/.bin/_mocha \
 		--report lcovonly \
-		$(TESTS) \
-		--bail
+		-- --bail \
+		$(TESTS)
 
 test-browser:
 	@node bin/browser_test.js
