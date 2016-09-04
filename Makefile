@@ -6,19 +6,35 @@ lint: $(SRC)
 	@./node_modules/.bin/eslint src bin
 
 build: $(SRC)
-	@mkdir -p build/test && node bin/build.js
+	@mkdir -p build/test && \
+		node bin/build.js && \
+		babel-external-helpers > build/babel_helpers.js
 
 test:
 	@NODE_ENV=test ./node_modules/.bin/mocha \
+		--require build/babel_helpers.js \
 		--bail \
 		$(TESTS)
 
 test-cov:
 	@NODE_ENV=test node \
 		./node_modules/.bin/istanbul cover \
+		-x build/markless.js -x build/babel_helpers.js \
 		./node_modules/.bin/_mocha \
+		-- \
+		--require build/babel_helpers.js \
+		--bail \
+		$(TESTS)
+
+test-travis:
+	@NODE_ENV=test node \
+		./node_modules/.bin/istanbul cover \
+		-x build/markless.js -x build/babel_helpers.js \
 		--report lcovonly \
-		-- --bail \
+		./node_modules/.bin/_mocha \
+		-- \
+		--require build/babel_helpers.js \
+		--bail \
 		$(TESTS)
 
 test-browser:
