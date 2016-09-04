@@ -14,5 +14,7 @@ script:
   - if node --version | grep -c v6 >/dev/null; then npm run cbtest; fi
 after_script:
   - echo "end tests"
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 addons:
   sauce_connect: true
