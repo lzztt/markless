@@ -4,11 +4,12 @@
   "description": "yet another markup language, inspired by markdown",
   "main": "dist/markless.js",
   "scripts": {
-    "lint": "node_modules/.bin/eslint src bin",
-    "build": "rm -rf build && mkdir -p build/test && node bin/build.js",
-    "test": "mocha build/test",
-    "dist": "mkdir -p dist && cp build/markless.js dist && node_modules/.bin/uglifyjs dist/markless.js -m -c -p relative --source-map dist/markless.min.js.map -o dist/markless.min.js",
-    "cbtest": "node bin/browser_test.js"
+    "lint": "make lint",
+    "build": "make build",
+    "test": "make test",
+    "codecov": "make test-cov",
+    "dist": "make dist",
+    "cbtest": "make test-browser"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "eslint-config-airbnb-base": "^5.0.3",
     "eslint-plugin-import": "^1.14.0",
     "finalhandler": "^0.5.0",
+    "istanbul": "^0.4.5",
     "mocha": "^3.0.2",
     "readdirp": "^2.1.0",
     "rollup": "^0.34.10",
