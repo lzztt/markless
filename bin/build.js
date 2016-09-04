@@ -86,9 +86,12 @@ stream.on('warn', err => {
             modules: 'umd',
           }],
         ],
+        plugins: [
+          'external-helpers',
+        ],
         moduleId: entry.path.split('/').pop().slice(0, -3)
           .replace(/\.(.)/g, (match, group1) => group1.toUpperCase()),
-      }).code,
+      }).code.replace('{', '{\n/* istanbul ignore next */'),
       werr => {
         if (werr) {
           throw werr
