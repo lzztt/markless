@@ -17,13 +17,6 @@ test-cov:
 	@NODE_ENV=test node \
 		./node_modules/.bin/istanbul cover \
 		./node_modules/.bin/_mocha \
-		$(TESTS) \
-		--bail
-
-test-travis:
-	@NODE_ENV=test node \
-		./node_modules/.bin/istanbul cover \
-		./node_modules/.bin/_mocha \
 		--report lcovonly \
 		$(TESTS) \
 		--bail

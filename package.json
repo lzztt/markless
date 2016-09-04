@@ -7,7 +7,7 @@
     "lint": "make lint",
     "build": "make build",
     "test": "make test",
-    "codecov": "make test-cov",
+    "cover": "make test-cov",
     "dist": "make dist",
     "cbtest": "make test-browser"
   },
