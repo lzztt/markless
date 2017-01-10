@@ -32,10 +32,9 @@ const processLine = (line) => {
 
   return {
     type: 'text',
-    body: segments.map(
-      (segment, index) =>
-      (index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`)
-    ).join('') + last,
+    body: segments.map((segment, index) => (
+      index % 2 === 0 ? link(email(font(segment))) : `<em class="code">${segment}</em>`
+    )).join('') + last,
   }
 }
 

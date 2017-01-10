@@ -12,6 +12,12 @@
     "semi": [
       "error",
       "never"
-    ]
+    ],
+    "no-plusplus": [
+      "error", {
+        "allowForLoopAfterthoughts": true
+      }
+    ],
+    "no-useless-escape": "off"
   }
 }

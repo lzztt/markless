@@ -52,7 +52,7 @@ fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
         ],
         moduleId: 'marklessTest',
       }).code,
-    werr => {
+    (werr) => {
       if (werr) {
         throw werr
       }
@@ -71,11 +71,11 @@ const stream = readdirp({
 
 const files = []
 
-stream.on('warn', err => {
+stream.on('warn', (err) => {
   console.error('warn', err)
-}).on('error', err => {
+}).on('error', (err) => {
   console.error('error', err)
-}).on('data', entry => {
+}).on('data', (entry) => {
   const outFile = `build/${entry.path}`
   fs.readFile(`src/${entry.path}`, 'utf8', (rerr, data) => {
     if (rerr) {
@@ -95,7 +95,7 @@ stream.on('warn', err => {
         moduleId: entry.path.split('/').pop().slice(0, -3)
           .replace(/\.(.)/g, (match, group1) => group1.toUpperCase()),
       }).code.replace('{', '{\n  /* istanbul ignore next */'),
-      werr => {
+      (werr) => {
         if (werr) {
           throw werr
         }
@@ -105,9 +105,9 @@ stream.on('warn', err => {
   files.push(outFile)
 }).on('end', () => {
   files.push('build/markless.js', 'build/test/markless.test.js')
-  const scripts = files.map(f =>
+  const scripts = files.map(f => (
     `<script src="${f.replace(/^build/, '..').replace('../test/', '')}"></script>`
-  ).join('\n')
+  )).join('\n')
 
   fs.writeFile('build/test/test.html', `<html>
 <head>
