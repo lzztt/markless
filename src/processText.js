@@ -40,7 +40,7 @@ class ListBlock {
   }
 
   toString() {
-    const items = this.items.map(it => {
+    const items = this.items.map((it) => {
       if (it.length === 1 && it[0] instanceof ParagraphBlock) {
         return it[0].getInnerText()
       }

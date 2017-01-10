@@ -67,9 +67,9 @@ const submitJobs = (config) => {
   return post('js-tests', tests)
 }
 
-const checkJobStatus = (jobs) => new Promise((resolve, reject) => {
+const checkJobStatus = jobs => new Promise((resolve, reject) => {
   const timer = setInterval(() => {
-    post('js-tests/status', jobs).then(status => {
+    post('js-tests/status', jobs).then((status) => {
       // not completed yet
       if (!status.completed) {
         const pendingJobs = status['js tests'].filter(job => !job.result)
@@ -89,7 +89,7 @@ const checkJobStatus = (jobs) => new Promise((resolve, reject) => {
       } else {
         resolve()
       }
-    }).catch(err => {
+    }).catch((err) => {
       reject(err)
     })
   }, 10 * 1000)
@@ -109,14 +109,15 @@ const serve = serveStatic('.')
 let i = 0
 const server = http.createServer((req, res) => {
   if (req.url === page) {
-    console.log(`get test client ${++i}: ${req.headers['user-agent']}`)
+    i += 1
+    console.log(`get test client ${i}: ${req.headers['user-agent']}`)
   }
   serve(req, res, finalhandler(req, res, {
     onerror: console.error,
   }))
 })
 
-server.on('err', err => {
+server.on('err', (err) => {
   console.log(`http server error: ${err}`)
 })
 
@@ -125,14 +126,14 @@ server.listen(port, () => {
   console.log(`web server started at localhost:${port}`)
 
   submitJobs(conf)
-    .then(jobs => {
+    .then((jobs) => {
       console.log(`number of submited jobs: ${jobs['js tests'].length}`)
       return checkJobStatus(jobs)
     })
     .then(() => {
       server.close()
       process.exit(0)
-    }).catch(err => {
+    }).catch((err) => {
       console.log(err)
       server.close()
       process.exit(1)
