@@ -1,7 +1,13 @@
-/* eslint max-len: ["error", 200] */
+/* eslint max-len: ["error", 150] */
+const reImageHttp = /^(https?:\/\/([\w\-]{2,20}\.){1,4}\w{2,6}(\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))$/
+const reImageLocal = /^((\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))$/
 
-const isImageUrl = str => str.match(/^(https?:\/\/([\w\-]{2,20}\.){1,4}\w{2,6}(\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))$/) || str.match(/^((\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))$/)
+const reLinkedImage = /^\[(https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?) /
 
+const reTitledImageHttp = /^\[([^\s\[\]][^\[\]]*[^\s\[\]]) (https?:\/\/([\w\-]{2,20}\.){1,4}\w{2,6}(\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))\]$/
+const reTitledImageLocal = /^\[([^\s\[\]][^\[\]]*[^\s\[\]]) ((\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))\]$/
+
+const isImageUrl = str => str.match(reImageHttp) || str.match(reImageLocal)
 
 const image = (line) => {
   // must be a new line, and 1 line only
@@ -15,7 +21,7 @@ const image = (line) => {
     return `<img src="${line}">`
   } else if (line[0] === '[' && line[line.length - 1] === ']') {
     // image link
-    if (line.match(/^\[(https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)\[\]\|]+)?) /)) {
+    if (line.match(reLinkedImage)) {
       const space = line.indexOf(' ')
       const link = line.slice(1, space)
       const img = line.slice(space + 1, -1)
@@ -23,13 +29,9 @@ const image = (line) => {
         return `<a href="${link}"><img src="${img}"></a>`
       }
     } else if (line.includes(' http')) {
-      return line.replace(
-        /^\[([^\s\[\]][^\[\]]*[^\s\[\]]) (https?:\/\/([\w\-]{2,20}\.){1,4}\w{2,6}(\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))\]$/,
-        '<figure><figcaption>$1</figcaption><img src="$2"></figure>')
+      return line.replace(reTitledImageHttp, '<figure><figcaption>$1</figcaption><img src="$2"></figure>')
     } else if (line.includes(' /')) {
-      return line.replace(
-        /^\[([^\s\[\]][^\[\]]*[^\s\[\]]) ((\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))\]$/,
-        '<figure><figcaption>$1</figcaption><img src="$2"></figure>')
+      return line.replace(reTitledImageLocal, '<figure><figcaption>$1</figcaption><img src="$2"></figure>')
     }
   }
 
