@@ -1,5 +1,9 @@
+const reNotMedia = /[\s<'"\(\)\[\]\{\}\|]/
+const reUrlT = /#t=\d+/
+const reUrlIndex = /&index=\d+/
+
 const media = (line) => {
-  if (line.search(/[\s<'"\(\)\[\]\{\}\|]/) !== -1) {
+  if (line.search(reNotMedia) !== -1) {
     return line
   }
 
@@ -23,7 +27,7 @@ const media = (line) => {
     if (line.slice(0, 32) === 'https://www.youtube.com/watch?v=') {
       // regular url
       uri = line.replace('watch?v=', 'embed/')
-        .replace(/#t=\d+/, '').replace(/&index=\d+/, '').replace('&', '?')
+        .replace(reUrlT, '').replace(reUrlIndex, '').replace('&', '?')
     } else if (line.slice(0, 16) === 'https://youtu.be') {
       // short url
       uri = line.replace('https://youtu.be', 'https://www.youtube.com/embed')

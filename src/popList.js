@@ -12,6 +12,10 @@ class Item {
 const OLIST = 'ol'
 const ULIST = 'ul'
 
+const reOList = /^[0-9]{1,2}\. +/
+const reUList = /^- +/
+const reIndent = /^ *$/
+
 const popList = (lines) => {
   if (lines.length > 0) {
     const items = []
@@ -19,11 +23,11 @@ const popList = (lines) => {
     let type
     let i = 0
     let line = lines[i]
-    let prefix = line.match(/^[0-9]{1,2}\. +/)
+    let prefix = line.match(reOList)
     if (prefix) {
       type = OLIST
     } else {
-      prefix = line.match(/^- +/)
+      prefix = line.match(reUList)
       if (prefix) {
         type = ULIST
       }
@@ -36,7 +40,7 @@ const popList = (lines) => {
       // check more lines
       for (i = 1; i < lines.length; i++) {
         line = lines[i]
-        prefix = type === OLIST ? line.match(/^[0-9]{1,2}\. +/) : line.match(/^- +/)
+        prefix = type === OLIST ? line.match(reOList) : line.match(reUList)
         if (prefix) {
           // new list item
           items.push(new Item(prefix[0].length, line))
@@ -44,7 +48,7 @@ const popList = (lines) => {
           // not a new list item
           // check if line belongs to last item (have the same indent)
           const item = items[items.length - 1]
-          if (line.length > item.indent && line.slice(0, item.indent).match(/^ *$/)) {
+          if (line.length > item.indent && line.slice(0, item.indent).match(reIndent)) {
             item.add(line)
           } else {
             break
