@@ -36,13 +36,13 @@ const post = (endpoint, data) => new Promise((resolve, reject) => {
     res.on('end', () => {
       const ret = JSON.parse(chunks.join(''))
       if ('error' in ret) {
-        reject(`got response with error: ${ret.error}`)
+        reject(new Error(`got response with error: ${ret.error}`))
       }
 
       if (ret) {
         resolve(ret)
       } else {
-        reject('no response returned')
+        reject(new Error('no response returned'))
       }
     })
   })
@@ -62,22 +62,22 @@ const post = (endpoint, data) => new Promise((resolve, reject) => {
 const submitJobs = (config) => {
   const tests = config
   tests.url = `http://localhost:${port}${page}`
-  tests.platforms = tests.platforms.filter(p => !('appiumVersion' in p)).map(p => [p.platform, p.browserName, p.version])
+  tests.platforms = tests.platforms.filter((p) => !('appiumVersion' in p)).map((p) => [p.platform, p.browserName, p.version])
 
   return post('js-tests', tests)
 }
 
-const checkJobStatus = jobs => new Promise((resolve, reject) => {
+const checkJobStatus = (jobs) => new Promise((resolve, reject) => {
   const timer = setInterval(() => {
     post('js-tests/status', jobs).then((status) => {
       // not completed yet
       if (!status.completed) {
-        const pendingJobs = status['js tests'].filter(job => !job.result)
+        const pendingJobs = status['js tests'].filter((job) => !job.result)
         console.log(`waiting for pending jobs: ${pendingJobs.length}`)
         return
       }
 
-      const failedJobs = status['js tests'].filter(job => !job.result || job.result.tests !== job.result.passes)
+      const failedJobs = status['js tests'].filter((job) => !job.result || job.result.tests !== job.result.passes)
       console.log(`successed jobs: ${status['js tests'].length - failedJobs.length}`)
       console.log(`failed    jobs: ${failedJobs.length}`)
 
@@ -85,7 +85,7 @@ const checkJobStatus = jobs => new Promise((resolve, reject) => {
       clearInterval(timer)
 
       if (failedJobs.length > 0) {
-        reject(`${failedJobs.length} jobs failed`)
+        reject(new Error(`${failedJobs.length} jobs failed`))
       } else {
         resolve()
       }
@@ -97,7 +97,7 @@ const checkJobStatus = jobs => new Promise((resolve, reject) => {
   // timeout after 1 hour
   setTimeout(() => {
     clearInterval(timer)
-    reject('browser test jobs timeout')
+    reject(new Error('browser test jobs timeout'))
   }, 3600 * 1000)
 })
 

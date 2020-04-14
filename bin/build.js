@@ -1,11 +1,10 @@
 /* eslint no-console: 'off' */
 
 const fs = require('fs')
-const rollup = require('rollup').rollup
-const babel = require('babel-core')
-const rollupBabel = require('rollup-plugin-babel')
+const { rollup } = require('rollup')
+const babel = require('@babel/core')
 const readdirp = require('readdirp')
-const version = require('../package.json').version
+const { version } = require('../package.json')
 
 const banner = `/*!
  * MarkLess.js v${version}
@@ -15,25 +14,12 @@ const banner = `/*!
 
 // bundle markless
 rollup({
-  entry: 'src/processText.js',
-  plugins: [
-    rollupBabel({
-      presets: [
-        ['es2015', {
-          modules: false,
-        }],
-      ],
-      plugins: [
-        'external-helpers',
-      ],
-    }),
-  ],
-}).then(bundle => bundle.write({
+  input: 'src/processText.js',
+}).then((bundle) => bundle.write({
   banner,
   format: 'umd',
-  dest: 'build/markless.js',
-  moduleId: 'markless',
-  moduleName: 'markless',
+  file: 'build/markless.js',
+  name: 'markless',
 })).catch(console.log)
 
 // markless test
@@ -45,13 +31,13 @@ fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
   fs.writeFile('build/test/markless.test.js',
     babel.transform(data.replace(/processText/g, 'markless')
       .replace(/describe\('(.*)',/g, (match, group1) => `describe('markless ${group1}',`), {
-        presets: [
-          ['es2015', {
-            modules: 'umd',
-          }],
-        ],
-        moduleId: 'marklessTest',
-      }).code,
+      presets: [
+        ['@babel/env', {
+          modules: 'umd',
+        }],
+      ],
+      moduleId: 'marklessTest',
+    }).code,
     (werr) => {
       if (werr) {
         throw werr
@@ -59,15 +45,13 @@ fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
     })
 })
 
-const helper = 'babel_helpers.js'
-fs.writeFile(`build/${helper}`, babel.buildExternalHelpers())
-
 // transform individual files and tests
-const stream = readdirp({
-  root: 'src',
-  entryType: 'files',
-  fileFilter: '*.js',
-})
+const stream = readdirp(
+  'src', {
+    entryType: 'files',
+    fileFilter: '*.js',
+  },
+)
 
 const files = []
 
@@ -85,12 +69,9 @@ stream.on('warn', (err) => {
     fs.writeFile(outFile,
       babel.transform(data, {
         presets: [
-          ['es2015', {
+          ['@babel/env', {
             modules: 'umd',
           }],
-        ],
-        plugins: [
-          'external-helpers',
         ],
         moduleId: entry.path.split('/').pop().slice(0, -3)
           .replace(/\.(.)/g, (match, group1) => group1.toUpperCase()),
@@ -105,7 +86,7 @@ stream.on('warn', (err) => {
   files.push(outFile)
 }).on('end', () => {
   files.push('build/markless.js', 'build/test/markless.test.js')
-  const scripts = files.map(f => (
+  const scripts = files.map((f) => (
     `<script src="${f.replace(/^build/, '..').replace('../test/', '')}"></script>`
   )).join('\n')
 
@@ -117,11 +98,9 @@ stream.on('warn', (err) => {
 </head>
 <body>
   <div id="mocha"></div>
-  <script src="../../node_modules/babel-polyfill/dist/polyfill.min.js"></script>
   <script src="../../node_modules/chai/chai.js"></script>
   <script src="../../node_modules/mocha/mocha.js"></script>
   <script>mocha.setup('bdd')</script>
-  <script src="../${helper}"></script>
 ${scripts}
   <script>
     onload = function() {
@@ -159,5 +138,9 @@ ${scripts}
     };
   </script>
 </body>
-</html>`)
+</html>`, (werr) => {
+    if (werr) {
+      throw werr
+    }
+  })
 })

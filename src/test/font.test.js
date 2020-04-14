@@ -79,8 +79,8 @@ describe('process font style', () => {
 
   it('font with color', () => {
     const inLine = 'text [red r] [blue b] [green g] text'
-    const outLine = 'text <em class="fc-red">red</em> <em class="fc-blue">blue</em> ' +
-      '<em class="fc-green">green</em> text'
+    const outLine = 'text <em class="fc-red">red</em> <em class="fc-blue">blue</em> '
+      + '<em class="fc-green">green</em> text'
     expect(font(inLine)).to.be.equal(outLine)
   })
 
@@ -99,8 +99,8 @@ describe('process font style', () => {
 
   it('font with background color', () => {
     const inLine = 'text [red r!] [blue b!] [green g!] text'
-    const outLine = 'text <em class="bc-red">red</em> <em class="bc-blue">blue</em> ' +
-      '<em class="bc-green">green</em> text'
+    const outLine = 'text <em class="bc-red">red</em> <em class="bc-blue">blue</em> '
+      + '<em class="bc-green">green</em> text'
     expect(font(inLine)).to.be.equal(outLine)
   })
 

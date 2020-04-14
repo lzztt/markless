@@ -62,7 +62,7 @@ const popList = (lines) => {
       lines.splice(0, i)
       return {
         type,
-        items: items.map(it => it.lines),
+        items: items.map((it) => it.lines),
       }
     }
   }

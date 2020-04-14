@@ -7,7 +7,7 @@ const reLinkedImage = /^\[(https?:\/\/)(([\w\-]{2,20}\.){1,4}\w{2,6}([^\s<'"\(\)
 const reTitledImageHttp = /^\[([^\s\[\]][^\[\]]*[^\s\[\]]) (https?:\/\/([\w\-]{2,20}\.){1,4}\w{2,6}(\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))\]$/
 const reTitledImageLocal = /^\[([^\s\[\]][^\[\]]*[^\s\[\]]) ((\/[^\/\s<'"\(\)\[\]\|]+)+\.(jpe?g|png|gif))\]$/
 
-const isImageUrl = str => str.match(reImageHttp) || str.match(reImageLocal)
+const isImageUrl = (str) => str.match(reImageHttp) || str.match(reImageLocal)
 
 const image = (line) => {
   // must be a new line, and 1 line only
@@ -19,7 +19,7 @@ const image = (line) => {
   // [link_url image_url]
   if (isImageUrl(line)) {
     return `<img src="${line}">`
-  } else if (line[0] === '[' && line[line.length - 1] === ']') {
+  } if (line[0] === '[' && line[line.length - 1] === ']') {
     // image link
     if (line.match(reLinkedImage)) {
       const space = line.indexOf(' ')
