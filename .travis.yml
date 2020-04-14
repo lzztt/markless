@@ -1,19 +1,13 @@
 sudo: false
 language: node_js
 node_js:
-  - "4"
-  - "5"
-  - "6"
-before_script:
-  - echo 'begin tests'
+  - "10"
+  - "12"
 script:
   - npm run lint
   - npm run build
-  - make test-travis
-  - npm run dist
-  - if node --version | grep -c v6 >/dev/null; then make test-browser; fi
-after_script:
-  - echo "end tests"
+  - npm run test
+  - npm run report
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 addons:

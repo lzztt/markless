@@ -33,7 +33,7 @@ const media = (line) => {
       uri = line.replace('https://youtu.be', 'https://www.youtube.com/embed')
     }
     return `<iframe width="420" height="315" src="${uri}" frameborder="0" allowfullscreen></iframe>`
-  } else if (line.slice(0, 7) === 'http://') {
+  } if (line.slice(0, 7) === 'http://') {
     // http
     // youku video?
   }

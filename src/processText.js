@@ -1,4 +1,5 @@
 /* eslint no-continue: "off" */
+/* eslint max-classes-per-file: ["error", 3] */
 
 import popHeader from './popHeader'
 import popQuote from './popQuote'
@@ -69,7 +70,7 @@ const processLines = (lines) => {
   let paragraphLines = []
   const processParagraph = () => {
     if (paragraphLines.length > 0) {
-      blocks.push(new ParagraphBlock(paragraphLines.map(ln => ln.body)))
+      blocks.push(new ParagraphBlock(paragraphLines.map((ln) => ln.body)))
       paragraphLines = []
     }
   }
@@ -102,7 +103,7 @@ const processLines = (lines) => {
     const list = popList(lines)
     if (list) {
       processParagraph()
-      blocks.push(new ListBlock(list.type, list.items.map(it => processLines(it))))
+      blocks.push(new ListBlock(list.type, list.items.map((it) => processLines(it))))
       continue
     }
 
