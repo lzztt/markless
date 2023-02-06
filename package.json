@@ -30,14 +30,14 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
-    "eslint-config-airbnb-base": "^14.1.0",
+    "eslint": "^8.33.0",
+    "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.2.0",
     "finalhandler": "^1.1.2",
-    "mocha": "^7.1.1",
+    "mocha": "^10.2.0",
     "nyc": "^15.0.1",
     "readdirp": "^3.4.0",
-    "rollup": "^2.6.1",
+    "rollup": "^3.14.0",
     "serve-static": "^1.11.1",
     "uglify-js": "^3.9.0"
   }

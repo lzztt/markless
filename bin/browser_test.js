@@ -101,7 +101,6 @@ const checkJobStatus = (jobs) => new Promise((resolve, reject) => {
   }, 3600 * 1000)
 })
 
-
 // Serve up module's root folder
 const serve = serveStatic('.')
 

@@ -28,7 +28,8 @@ fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
     throw rerr
   }
 
-  fs.writeFile('build/test/markless.test.js',
+  fs.writeFile(
+    'build/test/markless.test.js',
     babel.transform(data.replace(/processText/g, 'markless')
       .replace(/describe\('(.*)',/g, (match, group1) => `describe('markless ${group1}',`), {
       presets: [
@@ -42,16 +43,15 @@ fs.readFile('src/test/processText.test.js', 'utf8', (rerr, data) => {
       if (werr) {
         throw werr
       }
-    })
+    },
+  )
 })
 
 // transform individual files and tests
-const stream = readdirp(
-  'src', {
-    entryType: 'files',
-    fileFilter: '*.js',
-  },
-)
+const stream = readdirp('src', {
+  entryType: 'files',
+  fileFilter: '*.js',
+})
 
 const files = []
 
@@ -66,7 +66,8 @@ stream.on('warn', (err) => {
       throw rerr
     }
 
-    fs.writeFile(outFile,
+    fs.writeFile(
+      outFile,
       babel.transform(data, {
         presets: [
           ['@babel/env', {
@@ -80,7 +81,8 @@ stream.on('warn', (err) => {
         if (werr) {
           throw werr
         }
-      })
+      },
+    )
   })
 
   files.push(outFile)

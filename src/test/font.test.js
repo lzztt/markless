@@ -26,7 +26,6 @@ describe('process font style', () => {
     expect(font(inLine)).to.be.equal(outLine)
   })
 
-
   it('strike text with single word', () => {
     const inLine = 'text ~strike~ text'
     const outLine = 'text <s>strike</s> text'
@@ -50,7 +49,6 @@ describe('process font style', () => {
     const outLine = 'text ~strike strike ~ text'
     expect(font(inLine)).to.be.equal(outLine)
   })
-
 
   it('underline text with single word', () => {
     const inLine = 'text _underline_ text'
@@ -76,7 +74,6 @@ describe('process font style', () => {
     expect(font(inLine)).to.be.equal(outLine)
   })
 
-
   it('font with color', () => {
     const inLine = 'text [red r] [blue b] [green g] text'
     const outLine = 'text <em class="fc-red">red</em> <em class="fc-blue">blue</em> '
@@ -95,7 +92,6 @@ describe('process font style', () => {
     const outLine = 'text [red  r] <em class="fc-blue">blue</em> [green  g] text'
     expect(font(inLine)).to.be.equal(outLine)
   })
-
 
   it('font with background color', () => {
     const inLine = 'text [red r!] [blue b!] [green g!] text'
